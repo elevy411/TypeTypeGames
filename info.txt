@@ -1,1 +1,0 @@
-This is the branch we will use to make the basic typing game before splitting up into groups to work on the future games
