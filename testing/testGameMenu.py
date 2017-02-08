@@ -174,15 +174,35 @@ class GameMenu():
         gm = GameMenu(screen,[],G.BLACK)
         pygame.display.flip()
         mItem = MenuItem("")
+        pygame.key.set_repeat(500,50) #so people can hold a key down
         while loop:
             for e in pygame.event.get():
                 if e.type == pygame.QUIT:
                     loop = False
                 if e.type == pygame.KEYDOWN:
-                    if e.key == pygame.K_ESCAPE:
-                        loop = False
-                        break
-                    if e.key in range(0,255):
+                    if e.key in G.SPECIAL_KEYS:    
+                        if e.key == pygame.K_ESCAPE:
+                            loop = False
+                            break
+                        if e.key == pygame.K_RETURN:
+                            gm.screen.fill(G.BLACK)
+                            mItem.set_text("")
+                            mItem.set_label()
+                            label = mItem.get_label()
+                            label_rect = label.get_rect(center=(gm.get_width()/2,gm.get_height()/2))
+                            gm.screen.blit(label,label_rect)
+                            pygame.display.flip()
+                        if e.key == pygame.K_BACKSPACE:
+                            gm.screen.fill(G.BLACK)
+                            mItem.set_text(mItem.get_text()[:-1])
+                            mItem.set_label()
+                            label = mItem.get_label()
+                            label_rect = label.get_rect(center=(gm.get_width()/2,gm.get_height()/2))
+                            gm.screen.blit(label,label_rect)
+                            pygame.display.flip()
+                        else:
+                            pass
+                    elif e.key in range(0,255):
                         gm.screen.fill(G.BLACK)
                         mItem.set_text( (mItem.get_text() + pygame.key.name(e.key)).upper())
                         mItem.set_label()
