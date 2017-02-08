@@ -38,7 +38,7 @@ class Word(pygame.font.Font):
     	self.text = text
 
     def get_text(self):
-    	self.set_text()
+    	self.update()
         return self.text
     
     def set_label(self):
@@ -46,3 +46,19 @@ class Word(pygame.font.Font):
 
     def get_label(self):
         return self.label
+
+    def add_letter(self,let):
+    	self.letters.append(let)
+    	self.update()
+
+    def remove_letter(self):
+    	self.letters = self.letters[:-1]
+    	self.update()
+
+    def clear(self):
+    	self.letters = []
+    	self.update()
+    	
+    def update(self):
+    	self.set_text()
+    	self.set_label()
