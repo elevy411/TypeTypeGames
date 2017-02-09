@@ -17,8 +17,10 @@ def typing():
     words = G.make_word_list()
     wordList = map(lambda listword: Word.create_word(listword),words)
     nextWord = 0
+    currentLetter = 0
     P.key.set_repeat(500,50) #so people can hold a key down
     BG_COLOR = G.BLACK
+    LETTER_COLOR = G.DEF_LETTER_COLOR
     screenCenter = (gm.get_width()/2,gm.get_height()/2)
     topCenter = (gm.get_width()/2,gm.get_height()/4)
     gm.screen.fill(BG_COLOR) # set initial background
@@ -39,28 +41,33 @@ def typing():
                         screenWord.clear()
                         label = screenWord.get_label()
                         draw(gm,label,screenCenter)
-                        P.display.flip()
+                        P.display.update()
                     if e.key == P.K_BACKSPACE:
                         screenWord.remove_letter()
                         label = screenWord.get_label()
                         draw(gm,label,screenCenter)
-                        P.display.flip()
+                        P.display.update()
                     # if e.key == P.K_SPACE:
                     #     screenWord.add_letter(Letter(' '))
                     #     label = screenWord.get_label()
                     #     draw(gm,label,screenCenter)
-                    #     P.display.flip()
+                    #     P.display.update()
                     else:    
                         pass
                 elif e.key in range(0,255):
-                    if P.key.get_mods() in (4097,4098): #checks for left shift and right shift
-                        screenWord.add_letter( Letter(P.key.name(e.key).upper()) )
+                    if P.key.name(e.key) == wordList[nextWord].get_text()[currentLetter]:
+                        LETTER_COLOR = G.GREEN
                     else:
-                        screenWord.add_letter( Letter(P.key.name(e.key)) )
-                    
+                        LETTER_COLOR = G.RED
+
+                    if P.key.get_mods() in (4097,4098): #checks for left shift and right shift
+                        screenWord.add_letter( Letter(P.key.name(e.key).upper(),LETTER_COLOR) )
+                    else:
+                        screenWord.add_letter( Letter(P.key.name(e.key),LETTER_COLOR) )
+                    currentLetter += 1
                     label = screenWord.get_label()
                     draw(gm,label,screenCenter)                    
-                    P.display.flip()
+                    P.display.update()
 
 def draw(gm,label,center):
     label_rect = label.get_rect(center=center)

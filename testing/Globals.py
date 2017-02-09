@@ -10,6 +10,8 @@ BLUE = (0,0,255)
 GREEN = (0,255,0)
 SPECIAL_KEYS = [pygame.K_ESCAPE,pygame.K_BACKSPACE,pygame.K_TAB,pygame.K_RETURN,pygame.K_SPACE]
 WORDLIST = []
+DEF_LETTER_COLOR = WHITE
+DEF_WORD_COLOR = WHITE
 
 def make_word_list():
 	global WORDLIST
