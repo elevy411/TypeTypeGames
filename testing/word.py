@@ -6,7 +6,7 @@ import Globals as G
 pygame.init()
 
 class Word(pygame.font.Font):
-    def __init__(self,letters,text='',font=None,font_size=30,font_color=G.WHITE,(pos_x,pos_y)=(0,0)):
+    def __init__(self,letters,text='',font_color=G.WHITE,font=None,font_size=30,(pos_x,pos_y)=(0,0)):
         
         pygame.font.Font.__init__(self, font, font_size)
         self.text = text
@@ -69,3 +69,9 @@ class Word(pygame.font.Font):
         for letter in stringWord:
             letters.append(Letter(letter))
         return Word(letters,stringWord)
+
+    def equal(self,otherWord):
+        if self.text == otherWord.get_text():
+            return True
+        else:
+            return False

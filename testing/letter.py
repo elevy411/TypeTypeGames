@@ -5,7 +5,7 @@ import Globals as G
 pygame.init()
 
 class Letter(pygame.font.Font):
-    def __init__(self,letter,font=None,font_size=30,font_color=G.WHITE,(pos_x,pos_y)=(0,0)):
+    def __init__(self,letter,font_color=G.WHITE,font=None,font_size=30,(pos_x,pos_y)=(0,0)):
  
         pygame.font.Font.__init__(self, font, font_size)
         self.letter = letter
@@ -40,3 +40,9 @@ class Letter(pygame.font.Font):
 
     def get_label(self):
         return self.label
+
+    def equals(self,otherLetter):
+        if self.letter == otherLetter.get_letter():
+            return True
+        else:
+            return False
