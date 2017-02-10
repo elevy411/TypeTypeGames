@@ -7,7 +7,7 @@ pygame.init()
 
 class Word(pygame.font.Font):
     def __init__(self,letters,text='',font_color=G.WHITE,font=None,font_size=30,(pos_x,pos_y)=(0,0)):
-        
+
         pygame.font.Font.__init__(self, font, font_size)
         self.text = text
         self.font = font
@@ -26,8 +26,11 @@ class Word(pygame.font.Font):
         self.position = (x, y)
         self.pos_x = x
         self.pos_y = y
- 
+
     def set_font_color(self, rgb_tuple):
+        for i in rgb_tuple:
+            if i > 255 or i < 0:
+                raise Exception('RGB bounds violated')
         self.font_color = rgb_tuple
         self.label = self.render(self.text, 1, self.font_color)
 
@@ -40,7 +43,7 @@ class Word(pygame.font.Font):
     def get_text(self):
     	self.update()
         return self.text
-    
+
     def set_label(self):
         self.label = self.render(self.text,1,self.font_color)
 
@@ -58,11 +61,11 @@ class Word(pygame.font.Font):
     def clear(self):
     	self.letters = []
     	self.update()
-    	
+
     def update(self):
     	self.set_text()
     	self.set_label()
-    
+
     @staticmethod
     def create_word(stringWord):
         letters = []
