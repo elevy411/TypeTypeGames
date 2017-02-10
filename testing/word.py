@@ -73,7 +73,7 @@ class Word(pygame.font.Font):
             letters.append(Letter(letter))
         return Word(letters,stringWord)
 
-    def equal(self,otherWord):
+    def equals(self,otherWord):
         if self.text == otherWord.get_text():
             return True
         else:

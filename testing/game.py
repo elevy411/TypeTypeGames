@@ -29,7 +29,7 @@ def typing():
     while loop:
         for e in P.event.get():
             gm.screen.fill(BG_COLOR)
-            draw(gm,wordList[nextWord].get_label(),topCenter)
+            #draw(gm,wordList[nextWord].get_label(),topCenter)
             if e.type == P.QUIT:
                 loop = False
             if e.type == P.KEYDOWN:
@@ -41,12 +41,15 @@ def typing():
                         screenWord.clear()
                         label = screenWord.get_label()
                         draw(gm,label,screenCenter)
+                        draw(gm,wordList[nextWord].get_label(),topCenter)
                         P.display.update()
                     if e.key == P.K_BACKSPACE:
                         screenWord.remove_letter()
                         label = screenWord.get_label()
                         draw(gm,label,screenCenter)
+                        draw(gm,wordList[nextWord].get_label(),topCenter)
                         P.display.update()
+                        currentLetter -= 1
                     # if e.key == P.K_SPACE:
                     #     screenWord.add_letter(Letter(' '))
                     #     label = screenWord.get_label()
@@ -62,11 +65,20 @@ def typing():
 
                     if P.key.get_mods() in (4097,4098): #checks for left shift and right shift
                         screenWord.add_letter( Letter(P.key.name(e.key).upper(),LETTER_COLOR) )
+                        #draw(gm,Letter(P.key.name(e.key).upper(),LETTER_COLOR).get_label(),screenCenter)
                     else:
                         screenWord.add_letter( Letter(P.key.name(e.key),LETTER_COLOR) )
+
                     currentLetter += 1
+                    
+                    if (screenWord.equals(wordList[nextWord])):
+                        nextWord += 1
+                        currentLetter = 0
+                        screenWord.clear()
+                    
                     label = screenWord.get_label()
                     draw(gm,label,screenCenter)                    
+                    draw(gm,wordList[nextWord].get_label(),topCenter)
                     P.display.update()
 
 def draw(gm,label,center):
