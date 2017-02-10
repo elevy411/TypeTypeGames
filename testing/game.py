@@ -80,9 +80,6 @@ if __name__ == "__main__":
     # Creating the screen
     screen = P.display.set_mode((640, 480), 0, 32)
  
-    menu_items = ('Start', 'TypeTest', 'Quit')
-    funcs = {'Start': GameMenu.typing,
-             'TypeTest' : GameMenu.type_test,
     menu_items = ('Start', 'Quit')
     funcs = {'Start': typing,
              'Quit': sys.exit}
