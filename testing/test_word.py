@@ -91,6 +91,11 @@ def test_add_remove_clear_letter(test_word, font, letter_a, letter_b, letter_c):
 	#CHECK IF THE LETTERS WERE CLEARED
 	assert (zero_letters == 0), "The letters are not cleared"
 
+def test_equality(test_word):
+	temp = Word.create_word("Hello")
+	assert temp.equal(Word.create_word("Hello")), "Test equality failed."
+	assert not Word.create_word("noooo").equal(temp), "Test equality failed."
+
 #Test to see if the word updated
 def test_update(test_word):
 	#To implement
