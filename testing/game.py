@@ -3,6 +3,7 @@ import sys
 import pygame
 from word import Word
 from letter import Letter
+from TypeTest import TypeTest
 import Globals as G
 
 
@@ -77,6 +78,7 @@ class GameMenu():
         self.mouse_is_visible = True
         self.cur_item = None
 
+    # Functions like these aren't really necesarry in python I think.
     def get_width(self):
         return self.scr_width
 
@@ -208,14 +210,21 @@ class GameMenu():
                         gm.screen.blit(label,label_rect)
                         pygame.display.flip()
 
+    @staticmethod
+    def type_test():
+        type_test_game = TypeTest(gm.screen)
+        type_test_game.run()
+
+
 
 if __name__ == "__main__":
  
     # Creating the screen
     screen = pygame.display.set_mode((640, 480), 0, 32)
  
-    menu_items = ('Start', 'Quit')
+    menu_items = ('Start', 'TypeTest', 'Quit')
     funcs = {'Start': GameMenu.typing,
+             'TypeTest' : GameMenu.type_test,
              'Quit': sys.exit}
  
     pygame.display.set_caption('Game Menu')
