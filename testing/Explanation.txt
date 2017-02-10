@@ -1,0 +1,42 @@
+This is an explanation of the unit tests that are found in this branch. 
+
+test_globals.py:
+
+This file is going to house our unit tests for testing global functions which for now includes
+a wordList creator. It will allow for taking a list of words and importing them as a separated 
+list of strings without newlines. 
+
+test_letter.py:
+
+This file is unit tests for the letter class. Since letter inherits from Pygame.font, a lot of 
+the tests are to make sure that the pygame elements and our abstractions will work.
+
+test_word.py:
+
+This is the lengthiest file because it houses the majority of things we are trying to test.
+We are making sure that words can be created, removed, modified, and checked for equality. 
+We will most likely be adding tests for some sort of visual update but see NOTE as to why that is
+not included now. 
+
+testMenuItem.py:
+
+The menu item is purely graphical in nature (what you see when you click on menu items), so the 
+things being tested are some of the logic elements behind the usage of the item ( creating, 
+moving, changing the value and changing the color). 
+
+
+
+NOTES:
+On piazza it mentions we need only test the logic behind pure front-end/GUI elements. Since this ia game
+most elements are visual/rely on simply putting the correct images on screen. Unfortunately, this is
+very difficult to write a unit test for without being able to see what "correct" is. There was no way
+to "mock" class/function out ways to know what correct would look like since that would be most likely a 
+holistic viewing and changing. As tests come up to check that the graphical elements are working as intended,
+they will be added with permission. 
+
+Additionally, there are a couple functions that we reffered to in our iteration 1 plans that are not being tested
+here for similar reasons. IE: the screen.update() function in our "screen class" (now notably named gameMenu) and 
+all of the "move" functions which are visual in nature. 
+
+Lastly, our class names have changed slightly since the creation of our milestone 2 document to reflect a better organization
+of code and naming conventions. It made sense to abstract certain elements out. Ie: Screen becamse gameMenu and menuItem. 
