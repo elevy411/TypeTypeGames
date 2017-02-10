@@ -4,7 +4,7 @@ from letter import Letter
 import pygame
 import Globals as G
 
-test_letter = Letter('a', G.WHITE, font, 30, (20, 20))
+test_letter = Letter('a', G.WHITE, font, 30, (20, 20)) #Letter constuctor based on pygame Font which takes in (text,color,font,size,(posx,posy))
 font = pygame.font.Font(None, 30)
 
 
