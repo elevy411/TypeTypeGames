@@ -5,6 +5,7 @@ from letter import Letter
 import Globals as G
 import menuItem
 
+
 def test_constructor():
     test_item = menuItem.MenuItem("testing!")
     assert test_item.text == "testing!","text not set properly"

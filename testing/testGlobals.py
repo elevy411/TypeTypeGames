@@ -4,6 +4,7 @@ import pygame
 
 
 ##Globals will simply be a file with some useful functions like creating the master wordlist to use
+
 def test_make_word_list():
     test_list = Globals.make_word_list()
     expected_list = ["What","Hello","Amazing","Cool","Project",

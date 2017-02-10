@@ -8,6 +8,7 @@ test_letter = Letter('a', G.WHITE, font, 30, (20, 20)) #Letter constuctor based 
 font = pygame.font.Font(None, 30)
 
 
+
 def test_set_get_letter():
 	assert (test_letter.get_letter() == 'a')
 

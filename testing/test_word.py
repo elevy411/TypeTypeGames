@@ -3,6 +3,7 @@ from letter import Letter
 import Globals as G
 import pygame
 
+
 def test_word_constructor():
 	test_word = Word.create_word('TypeType is tight!')
 	assert (str(type(test_word)) == "<class \'word.Word\'>"), "Constructor Failure"
