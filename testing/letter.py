@@ -46,3 +46,15 @@ class Letter(pygame.font.Font):
             return True
         else:
             return False
+
+    def get_width(self):
+        return self.width
+
+    def get_height(self):
+        return self.height
+        
+    def print_facts(self):
+        print "Value -- {}\n".format(self.letter)
+        print "Width -- {}\n".format(self.width)
+        print "Height -- {}\n".format(self.height)
+        print "Pos -- ({},{})\n".format(self.pos_x,self.pos_y)

@@ -58,6 +58,9 @@ class Word(pygame.font.Font):
     	self.letters = self.letters[:-1]
     	self.update()
 
+    def get_letters(self):
+        return self.letters
+
     def clear(self):
     	self.letters = []
     	self.update()
@@ -78,3 +81,13 @@ class Word(pygame.font.Font):
             return True
         else:
             return False
+
+    def print_facts(self):
+        print "Value -- {}\n".format(self.text)
+        print "Width -- {}\n".format(self.width)
+        print "Height -- {}\n".format(self.height)
+        print "Pos -- ({},{})\n".format(self.pos_x,self.pos_y)
+
+    def print_letter_facts(self):
+        for letter in self.letters:
+            letter.print_facts()
