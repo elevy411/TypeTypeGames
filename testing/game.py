@@ -21,6 +21,7 @@ def typing():
     currentWordToType = wordList[nextWord]
     currentWordLabel = currentWordToType.get_label()
     currentLetterCount = 0
+    letterWidth = 0
     P.key.set_repeat(500,50) #so people can hold a key down
     BG_COLOR = G.BLACK
     LETTER_COLOR = G.DEF_LETTER_COLOR
@@ -56,19 +57,36 @@ def typing():
                         label = screenWord.get_label()
                         draw(gm, label, screenCenter)
                         draw(gm, currentWordLabel, topCenter)
+                        currentLetterCount = 0
+                        xDifferentials = []
                         P.display.update()
                     if e.key == P.K_BACKSPACE:
                         # remove letter from the word being typed if backspace
+                        #if currentLetterCount <= 0:
+                         #   currentLetter = 0 
                         screenWord.remove_letter()
                         label = screenWord.get_label()
                         draw(gm, label, screenCenter)
                         draw(gm, currentWordLabel, topCenter)
-                        #draw(gm, screenWord.get_label(), screenCenter)
-                        for pos,letter in enumerate(screenWord.get_letters()):
-                            draw(gm,letter.get_label(),(centerX-xDifferentials[pos],centerY-25))
-
-                        P.display.update()
+                        offsetCenter = centerX + ((letterWidth * screenWord.length) / 2)
+                        if xDifferentials != []:
+                            xDifferentials = xDifferentials[:-1]
+                            print xDifferentials
+                            if xDifferentials != []:
+                                letterWidth = xDifferentials[len(xDifferentials)-1]
+                            else:
+                                letterWidth = 0
+                            xDifferentials = map(lambda x: x - letterWidth, xDifferentials)
+                            for pos,letter in enumerate(screenWord.get_letters()):
+                                draw(gm,letter.get_label(),(offsetCenter-xDifferentials[pos],centerY-25))
+                        else:
+                            for pos,letter in enumerate(screenWord.get_letters()):
+                                draw(gm,letter.get_label(),(screenCenter-xDifferentials[pos],centerY-25))
                         currentLetterCount -= 1
+                        if currentLetterCount < 0:
+                            currentLetterCount = 0
+                        print xDifferentials
+                        P.display.update()
                     # if e.key == P.K_SPACE:
                     #     screenWord.add_letter(Letter(' '))
                     #     label = screenWord.get_label()
@@ -95,17 +113,20 @@ def typing():
                     #print currentLetter.get_width()
                     letterWidth = currentLetter.get_width()
                     xDifferentials = map(lambda x: x + letterWidth,xDifferentials)
-                    #print xDifferentials
+                    print xDifferentials
                     currentLetterCount += 1
+                    #print currentLetterCount
                     xDifferentials.append(0)
 
                     if (screenWord.equals(wordList[nextWord])):
                         nextWord += 1
                         currentLetterCount = 0
+                        letterWidth = 0
+                        xDifferentials = []
                         screenWord.clear()
 
                     offsetCenter = centerX + ((letterWidth * screenWord.length) / 2)
-                    print centerX, offsetCenter
+                    #print centerX, offsetCenter
 
                     for pos,letter in enumerate(screenWord.get_letters()):
                         draw(gm,letter.get_label(),(offsetCenter - xDifferentials[pos],centerY-25))
