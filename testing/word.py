@@ -59,7 +59,7 @@ class Word(pygame.font.Font):
 
     def remove_letter(self):
     	self.letters = self.letters[:-1]
-        self.length -= 1
+        self.length = max(0, self.length - 1)
     	self.update()
 
     def get_letters(self):

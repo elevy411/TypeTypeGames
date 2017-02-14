@@ -68,7 +68,7 @@ def typing():
                         label = screenWord.get_label()
                         draw(gm, label, screenCenter)
                         draw(gm, currentWordLabel, topCenter)
-                        offsetCenter = centerX + ((letterWidth * screenWord.length) / 2)
+                        offsetCenter = centerX + ((letterWidth * (screenWord.length - 1)) / 2)
                         if xDifferentials != []:
                             xDifferentials = xDifferentials[:-1]
                             print xDifferentials
@@ -125,7 +125,7 @@ def typing():
                         xDifferentials = []
                         screenWord.clear()
 
-                    offsetCenter = centerX + ((letterWidth * screenWord.length) / 2)
+                    offsetCenter = centerX + ((letterWidth * (screenWord.length - 1)) / 2)
                     #print centerX, offsetCenter
 
                     for pos,letter in enumerate(screenWord.get_letters()):
