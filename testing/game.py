@@ -84,7 +84,7 @@ def typing():
 
                     #print currentLetter.get_width()
                     xDifferentials = map(lambda x: x + currentLetter.get_width(),xDifferentials)
-                    print xDifferentials
+                    #print xDifferentials
                     currentLetterCount += 1
                     xDifferentials.append(0)
 

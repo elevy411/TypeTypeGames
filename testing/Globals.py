@@ -2,6 +2,7 @@ import sys
 import pygame
 
 pygame.init()
+pygame.font.init()
 
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
@@ -12,6 +13,7 @@ SPECIAL_KEYS = [pygame.K_ESCAPE,pygame.K_BACKSPACE,pygame.K_TAB,pygame.K_RETURN,
 WORDLIST = []
 DEF_LETTER_COLOR = WHITE
 DEF_WORD_COLOR = WHITE
+MONOSPACE_FONT = "./static/Anonymous_Pro.ttf"
 
 def make_word_list():
 	global WORDLIST
