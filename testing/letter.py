@@ -5,7 +5,7 @@ import Globals as G
 pygame.init()
 
 class Letter(pygame.font.Font):
-    def __init__(self,letter,font_color=G.WHITE,font=G.MONOSPACE_FONT,font_size=30,(pos_x,pos_y)=(0,0)):
+    def __init__(self,letter,font_color=G.WHITE,font=G.MONOSPACE_FONT,font_size=30,(pos_x,pos_y)=(0,0),xspeed=0,yspeed=5):
  
         pygame.font.Font.__init__(self, font, font_size)
         self.letter = letter
@@ -19,12 +19,18 @@ class Letter(pygame.font.Font):
         self.pos_x = pos_x
         self.pos_y = pos_y
         self.position = pos_x, pos_y
+        self.xspeed = xspeed
+        self.yspeed = yspeed
 
     def set_position(self, x, y):
         self.position = (x, y)
         self.pos_x = x
         self.pos_y = y
- 
+
+    def update_position(self):
+        self.set_position((float)(self.pos_x+self.xspeed),  
+             (float)(self.pos_y+self.yspeed))
+             
     def set_font_color(self, rgb_tuple):
         self.font_color = rgb_tuple
         self.label = self.render(self.letter, 1, self.font_color)

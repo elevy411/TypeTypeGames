@@ -37,6 +37,7 @@ def typing():
     draw(gm, currentWordLabel, topCenter) # draw first word
     P.display.flip()
     while loop:
+        P.time.Clock().tick(50)
         for e in P.event.get():
             gm.screen.fill(BG_COLOR)
             #draw(gm,wordList[nextWord].get_label(),topCenter)
@@ -127,7 +128,6 @@ def typing():
 
                     offsetCenter = centerX + ((letterWidth * (screenWord.length - 1)) / 2)
                     #print centerX, offsetCenter
-
                     for pos,letter in enumerate(screenWord.get_letters()):
                         draw(gm,letter.get_label(),(offsetCenter - xDifferentials[pos],centerY-25))
                     
@@ -137,8 +137,25 @@ def typing():
                     draw(gm,wordList[nextWord].get_label(),topCenter)
                     #draw(gm,newLabel,screenCenter)
                     P.display.update()
-
                     #print screenWord.metrics(screenWord.get_text())
+
+        rect = update_word_screen_pos(screenWord)
+        P.display.update()
+
+
+def update_word_screen_pos(current_word):
+    current_word.set_position(300,current_word.pos_y)
+    current_word.update_position()
+    print current_word.position
+    for letter in current_word.get_letters():
+        letter.update_position()
+        #draw(gm,letter.get_label(),(letter.pos_x+letter.width/2,letter.pos_y+letter.height/2))
+    current_word.set_label()
+    word_pos = current_word.position
+    draw(gm,current_word.get_label(),
+        (word_pos[0]+current_word.width/2, word_pos[1]+current_word.height/2))
+
+
 
 def draw(gm,label,center):
     label_rect = label.get_rect(center=center)

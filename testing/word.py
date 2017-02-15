@@ -6,7 +6,7 @@ import Globals as G
 pygame.init()
 
 class Word(pygame.font.Font):
-    def __init__(self,letters,text='',font_color=G.WHITE,font=G.MONOSPACE_FONT,font_size=30,(pos_x,pos_y)=(0,0)):
+    def __init__(self,letters,text='',font_color=G.WHITE,font=G.MONOSPACE_FONT,font_size=30,(pos_x,pos_y)=(0,0),xspeed=0,yspeed=1):
 
         pygame.font.Font.__init__(self, font, font_size)
         self.text = text
@@ -22,11 +22,17 @@ class Word(pygame.font.Font):
         self.pos_x = pos_x
         self.pos_y = pos_y
         self.position = pos_x, pos_y
+        self.xspeed = xspeed
+        self.yspeed = yspeed
 
     def set_position(self, x, y):
         self.position = (x, y)
         self.pos_x = x
         self.pos_y = y
+
+    def update_position(self):
+        self.set_position((float)(self.pos_x+self.xspeed), 
+            (float)(self.pos_y+self.yspeed))
 
     def set_font_color(self, rgb_tuple):
         for i in rgb_tuple:
