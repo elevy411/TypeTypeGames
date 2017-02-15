@@ -31,7 +31,7 @@ def typing():
     centerY = screenCenter[1]
     lastLetter = None
     xDifferentials = []
-
+    drawArray = []
     topCenter = (gm.get_width()/2,gm.get_height()/4)
     gm.screen.fill(BG_COLOR) # set initial background
     draw(gm, currentWordLabel, topCenter) # draw first word
@@ -144,6 +144,8 @@ def typing():
 
 
 def update_word_screen_pos(current_word):
+    #have to brute force starting position since we don't track individual positions in this
+    #implementation
     current_word.set_position(300,current_word.pos_y)
     current_word.update_position()
     print current_word.position
