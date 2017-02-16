@@ -58,9 +58,9 @@ def typing():
                         label = screenWord.get_label()
                         draw(gm, label, screenCenter)
                         draw(gm, currentWordLabel, topCenter)
+                        drawArray.append((currentWordLabel, topCenter))
                         currentLetterCount = 0
                         xDifferentials = []
-                        P.display.update()
                     if e.key == P.K_BACKSPACE:
                         # remove letter from the word being typed if backspace
                         #if currentLetterCount <= 0:
@@ -148,7 +148,6 @@ def update_word_screen_pos(current_word):
     #implementation
     current_word.set_position(300,current_word.pos_y)
     current_word.update_position()
-    print current_word.position
     for letter in current_word.get_letters():
         letter.update_position()
         #draw(gm,letter.get_label(),(letter.pos_x+letter.width/2,letter.pos_y+letter.height/2))
