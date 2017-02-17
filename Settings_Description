@@ -1,0 +1,7 @@
+Settings.py:
+
+Button: Clickable button with functionality
+Settings: Creates the setting page with the following functionality:
+  -Level of Difficulty
+  -Back to Main Menu
+  -Quit
