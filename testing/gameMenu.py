@@ -9,15 +9,18 @@ from menuItem import MenuItem
 pygame.init()
 
 class GameMenu():
-    def __init__(self, screen, items, funcs, hasTitle = False, title = '' ,bg_color=G.BLUE, font=None, font_size=30,
-                 font_color=G.WHITE):
+    def __init__(self, screen, items, funcs, hasTitle = False, title = '' ,bg_color=G.SKY_BLUE, font=None, font_size=30,
+                 font_color=G.OCEAN_BLUE):
         self.screen = screen
         self.scr_width = self.screen.get_rect().width
         self.scr_height = self.screen.get_rect().height
         self.hasTitle = hasTitle
         self.title = title
         self.bg_color = bg_color
+        self.font_color = font_color
         self.clock = pygame.time.Clock()
+        self.title_color = G.JUNGLE_GREEN
+        self.selection_color = G.CRIMSON
  
         self.funcs = funcs
         self.items = []
@@ -54,7 +57,7 @@ class GameMenu():
         for item in self.items:
             # Return all to neutral
             item.set_italic(False)
-            item.set_font_color(G.WHITE)
+            item.set_font_color(self.font_color)
  
         if self.cur_item is None:
             self.cur_item = 0
@@ -74,7 +77,7 @@ class GameMenu():
                 self.cur_item = 0
  
         self.items[self.cur_item].set_italic(True)
-        self.items[self.cur_item].set_font_color(G.RED)
+        self.items[self.cur_item].set_font_color(self.selection_color)
  
         # Finally check if Enter or Space is pressed
         if key == pygame.K_SPACE or key == pygame.K_RETURN:
@@ -84,10 +87,10 @@ class GameMenu():
     def set_mouse_selection(self, item, mpos):
         """Marks the MenuItem the mouse cursor hovers on."""
         if item.is_mouse_selection(mpos):
-            item.set_font_color(G.RED)
+            item.set_font_color(self.selection_color)
             item.set_italic(True)
         else:
-            item.set_font_color(G.WHITE)
+            item.set_font_color(self.font_color)
             item.set_italic(False)
  
     def run(self):
@@ -123,7 +126,7 @@ class GameMenu():
                     self.set_mouse_selection(item, mpos)
                 self.screen.blit(item.label, item.position)
             if self.hasTitle: 
-                gameTitle = Word([],self.title,G.RED,G.MONOSPACE_FONT,50)
+                gameTitle = Word([],self.title,self.title_color,G.MONOSPACE_FONT,50)
                 G.draw(self,gameTitle.get_label(),(G.TOP_CENTER[0],G.TOP_CENTER[1]/1.25))
             
             pygame.display.flip()
