@@ -24,7 +24,7 @@ def test_set_get_label():
 
 	# test with changing the render color when setting label
 	# used to be white, but now it's red
-	test_letter1.set_label(G.RED)
+	test_letter.set_label(G.RED)
 
 	letter1_buffer = letter1.get_buffer.raw
 	letter2_buffer = letter2.get_buffer.raw
