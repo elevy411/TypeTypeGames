@@ -9,12 +9,13 @@ from menuItem import MenuItem
 pygame.init()
 
 class GameMenu():
-    def __init__(self, screen, items, funcs, bg_color=G.BLUE, font=None, font_size=30,
+    def __init__(self, screen, items, funcs, hasTitle = False, title = '' ,bg_color=G.BLUE, font=None, font_size=30,
                  font_color=G.WHITE):
         self.screen = screen
         self.scr_width = self.screen.get_rect().width
         self.scr_height = self.screen.get_rect().height
- 
+        self.hasTitle = hasTitle
+        self.title = title
         self.bg_color = bg_color
         self.clock = pygame.time.Clock()
  
@@ -121,5 +122,8 @@ class GameMenu():
                 if self.mouse_is_visible:
                     self.set_mouse_selection(item, mpos)
                 self.screen.blit(item.label, item.position)
-
+            if self.hasTitle: 
+                gameTitle = Word([],self.title,G.RED,G.MONOSPACE_FONT,50)
+                G.draw(self,gameTitle.get_label(),(G.TOP_CENTER[0],G.TOP_CENTER[1]/1.25))
+            
             pygame.display.flip()

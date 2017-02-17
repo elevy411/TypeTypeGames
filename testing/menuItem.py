@@ -1,8 +1,8 @@
 
 import sys
 import pygame
-from word import Word
-from letter import Letter
+#from word import Word
+#from letter import Letter
 import Globals as G
 
 pygame.init()
