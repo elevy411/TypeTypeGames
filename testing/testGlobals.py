@@ -17,14 +17,14 @@ def test_make_word_list():
 
 
 def test_set_difficulty():
-	Globals.set_difficulty('MEDIUM')
-	assert (Globals.DIFFICULTY_LEVEL == 2), ("set_difficulty to MEDIUM failed")
+	Globals.set_difficulty_medium()
+	assert (Globals.DIFFICULTY_LEVEL == 2), ("set_difficulty_medium failed")
 
-	Globals.set_difficulty('HARD')
-	assert (Globals.DIFFICULTY_LEVEL == 3), ("set_difficulty to HARD failed")
+	Globals.set_difficulty_hard()
+	assert (Globals.DIFFICULTY_LEVEL == 3), ("set_difficulty_hard failed")
 
-	Globals.set_difficulty('EASY')
-	assert (Globals.DIFFICULTY_LEVEL == 1), ("set_difficulty to EASY failed")
+	Globals.set_difficulty_easy()
+	assert (Globals.DIFFICULTY_LEVEL == 1), ("set_difficulty_easy failed")
 
 
 if __name__ == "__main__":

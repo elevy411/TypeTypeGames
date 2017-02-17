@@ -4,8 +4,10 @@ This is an explanation of the unit tests that are found in this branch.
 test_globals.py:
 
 This file is going to house our unit tests for testing global functions which for now includes
-a wordList creator. It will allow for taking a list of words and importing them as a separated 
-list of strings without newlines. 
+a wordList creator and functions to set the difficulty level of the game. The wordList creator
+will allow for taking a list of words and importing them as a separated list of strings without
+newlines, and the difficulty setter functions will allow the difficulty level of the game to be
+changed to easy, medium, or hard.
 
 test_letter.py:
 
