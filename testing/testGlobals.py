@@ -15,5 +15,18 @@ def test_make_word_list():
         assert Globals.WORDLIST[i] == expected_list[i],"global list indices do not match"
     print "no errors in make_word_list"
 
+
+def test_set_difficulty():
+	Globals.set_difficulty('MEDIUM')
+	assert (Globals.DIFFICULTY_LEVEL == 2), ("set_difficulty to MEDIUM failed")
+
+	Globals.set_difficulty('HARD')
+	assert (Globals.DIFFICULTY_LEVEL == 3), ("set_difficulty to HARD failed")
+
+	Globals.set_difficulty('EASY')
+	assert (Globals.DIFFICULTY_LEVEL == 1), ("set_difficulty to EASY failed")
+
+
 if __name__ == "__main__":
     test_make_word_list()
+    test_set_difficulty()
