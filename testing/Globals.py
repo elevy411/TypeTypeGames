@@ -32,10 +32,14 @@ def draw(gm,label,center):
     label_rect = label.get_rect(center=center)
     gm.screen.blit(label,label_rect)
 
-def set_difficulty(diff):
-	if diff == 'EASY':
-		DIFFICULTY_LEVEL = 1
-	elif diff == 'MEDIUM':
-		DIFFICULTY_LEVEL = 2
-	elif diff == 'HARD':
-		DIFFICULTY_LEVEL = 3
+def set_difficulty_easy():
+	global DIFFICULTY_LEVEL
+	DIFFICULTY_LEVEL = 1
+
+def set_difficulty_medium():
+	global DIFFICULTY_LEVEL
+	DIFFICULTY_LEVEL = 2
+
+def set_difficulty_hard():
+	global DIFFICULTY_LEVEL
+	DIFFICULTY_LEVEL = 3

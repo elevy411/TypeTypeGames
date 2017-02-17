@@ -12,6 +12,7 @@ P.init()
  
 def typing():
     loop = True
+    startOver = True
     screen = P.display.set_mode((G.D_WIDTH,G.D_HEIGHT),0,32)
     gm = GameMenu(screen,[],G.BLACK)   
     screenWord = Word([])
@@ -52,6 +53,7 @@ def typing():
                     if e.key == P.K_ESCAPE:
                         # exit loop if escape
                         loop = False
+                        startOver = False
                         break
                     if e.key == P.K_RETURN:
                         # clear word typed so far if enter is pressed
@@ -158,7 +160,6 @@ def typing():
                         G.draw(gm,wordList[nextWord].get_label(),topCenter)
                         P.display.update()
 
-    startOver = True
     while(startOver):
         for e in P.event.get():
             if e.type == P.QUIT:
