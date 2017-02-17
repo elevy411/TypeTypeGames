@@ -1,9 +1,9 @@
-
+from time import sleep
 import sys
 import pygame as P
 from word import Word
 from letter import Letter
-from TypeTest import TypeTest
+#from TypeTest import TypeTest
 import Globals as G
 from menuItem import MenuItem
 from gameMenu import GameMenu
@@ -37,6 +37,8 @@ def typing():
     draw(gm, currentWordLabel, topCenter) # draw first word
     P.display.flip()
     while loop:
+        currentWordToType = wordList[nextWord]
+        currentWordLabel = currentWordToType.get_label()
         for e in P.event.get():
             gm.screen.fill(BG_COLOR)
             #draw(gm,wordList[nextWord].get_label(),topCenter)
@@ -54,8 +56,8 @@ def typing():
                     if e.key == P.K_RETURN:
                         # clear word typed so far if enter is pressed
                         screenWord.clear()
-                        label = screenWord.get_label()
-                        draw(gm, label, screenCenter)
+                        #label = screenWord.get_label()
+                        #draw(gm, label, screenCenter)
                         draw(gm, currentWordLabel, topCenter)
                         currentLetterCount = 0
                         xDifferentials = []
@@ -65,13 +67,13 @@ def typing():
                         #if currentLetterCount <= 0:
                          #   currentLetter = 0 
                         screenWord.remove_letter()
-                        label = screenWord.get_label()
-                        draw(gm, label, screenCenter)
-                        draw(gm, currentWordLabel, topCenter)
+                        #label = screenWord.get_label()
+                        #draw(gm, label, screenCenter)
+                        draw(gm, currentWordToType.get_label(), topCenter)
                         offsetCenter = centerX + ((letterWidth * (screenWord.length - 1)) / 2)
                         if xDifferentials != []:
                             xDifferentials = xDifferentials[:-1]
-                            print xDifferentials
+                            #print xDifferentials
                             if xDifferentials != []:
                                 letterWidth = xDifferentials[len(xDifferentials)-1]
                             else:
@@ -85,60 +87,100 @@ def typing():
                         currentLetterCount -= 1
                         if currentLetterCount < 0:
                             currentLetterCount = 0
-                        print xDifferentials
+                        #print xDifferentials
                         P.display.update()
-                    # if e.key == P.K_SPACE:
-                    #     screenWord.add_letter(Letter(' '))
-                    #     label = screenWord.get_label()
-                    #     draw(gm,label,screenCenter)
-                    #     P.display.update()
+                    if e.key == P.K_SPACE:
+                        screenWord.add_letter(Letter(' '))
+                        currentLetter = screenWord.get_letters()[currentLetterCount]
+                        
+                        letterWidth = currentLetter.get_width()
+                        xDifferentials = map(lambda x: x + letterWidth,xDifferentials)
+                        currentLetterCount += 1
+                        xDifferentials.append(0)
+                        
+
+                        if (screenWord.equals(currentWordToType)):
+                            nextWord += 1
+                            currentLetterCount = 0
+                            letterWidth = 0
+                            xDifferentials = []
+                            screenWord.clear()
+                            if nextWord == len(wordList):
+                                draw(gm,Word.create_word('You Win!').get_label(),screenCenter)
+                                draw(gm,Word.create_word('Press Any Key To Continue').get_label(),(centerX,centerY-100))
+                                P.display.update()
+                                loop = False
+                                break
+
+                        offsetCenter = centerX + ((letterWidth * (screenWord.length - 1)) / 2)
+                        for pos,letter in enumerate(screenWord.get_letters()):
+                            draw(gm,letter.get_label(),(offsetCenter - xDifferentials[pos],centerY-25))
+                        draw(gm,wordList[nextWord].get_label(),topCenter)
+                        P.display.update()
                     else:    
                         pass
                 elif e.key in range(0,255):
-                    keyName = P.key.name(e.key)
-                    #print P.key.get_mods()
-                    if P.key.get_mods() in (1,2) or P.key.get_mods() in (4097,4098): #checks for left shift and right shift
-                        keyName = keyName.upper()
-                    
-                    if currentLetterCount < currentWordToType.length and \
-                       keyName == wordList[nextWord].get_text()[currentLetterCount]:
-                        LETTER_COLOR = G.GREEN
+                    if currentLetterCount == len(currentWordToType.get_text()):
+                        pass
                     else:
-                        LETTER_COLOR = G.RED
+                        keyName = P.key.name(e.key)
+                        #print P.key.get_mods()
+                        if P.key.get_mods() in (1,2) or P.key.get_mods() in (4097,4098): #checks for left shift and right shift
+                            keyName = keyName.upper()
+                        
+                        if currentLetterCount < currentWordToType.length and \
+                           keyName == wordList[nextWord].get_text()[currentLetterCount]:
+                            LETTER_COLOR = G.GREEN
+                        else:
+                            LETTER_COLOR = G.RED
 
-                    #draw(gm,Letter(keyName.upper(),LETTER_COLOR).get_label(),screenCenter)
-                    screenWord.add_letter( Letter(keyName,LETTER_COLOR) )
-                    currentLetter = screenWord.get_letters()[currentLetterCount]
+                        #draw(gm,Letter(keyName.upper(),LETTER_COLOR).get_label(),screenCenter)
+                        screenWord.add_letter( Letter(keyName,LETTER_COLOR) )
+                        currentLetter = screenWord.get_letters()[currentLetterCount]
 
-                    #print currentLetter.get_width()
-                    letterWidth = currentLetter.get_width()
-                    xDifferentials = map(lambda x: x + letterWidth,xDifferentials)
-                    print xDifferentials
-                    currentLetterCount += 1
-                    #print currentLetterCount
-                    xDifferentials.append(0)
+                        #print currentLetter.get_width()
+                        letterWidth = currentLetter.get_width()
+                        xDifferentials = map(lambda x: x + letterWidth,xDifferentials)
+                        #print xDifferentials
+                        currentLetterCount += 1
+                        #print currentLetterCount
+                        xDifferentials.append(0)
 
-                    if (screenWord.equals(wordList[nextWord])):
-                        nextWord += 1
-                        currentLetterCount = 0
-                        letterWidth = 0
-                        xDifferentials = []
-                        screenWord.clear()
+                        if (screenWord.equals(currentWordToType)):
+                            nextWord += 1
+                            currentLetterCount = 0
+                            letterWidth = 0
+                            xDifferentials = []
+                            screenWord.clear()
+                            if nextWord == len(wordList):
+                                draw(gm,Word.create_word('You Win!').get_label(),screenCenter)
+                                draw(gm,Word.create_word('Press Any Key To Continue').get_label(),(centerX,centerY-100))
+                                P.display.update()
+                                loop = False
+                                break
 
-                    offsetCenter = centerX + ((letterWidth * (screenWord.length - 1)) / 2)
-                    #print centerX, offsetCenter
+                        offsetCenter = centerX + ((letterWidth * (screenWord.length - 1)) / 2)
+                        #print centerX, offsetCenter
 
-                    for pos,letter in enumerate(screenWord.get_letters()):
-                        draw(gm,letter.get_label(),(offsetCenter - xDifferentials[pos],centerY-25))
-                    
-                    #newLabel = Letter(keyName,LETTER_COLOR).get_label()
-                    label = screenWord.get_label()
-                    draw(gm,label,screenCenter)                    
-                    draw(gm,wordList[nextWord].get_label(),topCenter)
-                    #draw(gm,newLabel,screenCenter)
-                    P.display.update()
+                        for pos,letter in enumerate(screenWord.get_letters()):
+                            draw(gm,letter.get_label(),(offsetCenter - xDifferentials[pos],centerY-25))
+                        
+                        #newLabel = Letter(keyName,LETTER_COLOR).get_label()
+                        #label = screenWord.get_label()
+                        #draw(gm,label,screenCenter)                    
+                        draw(gm,wordList[nextWord].get_label(),topCenter)
+                        #draw(gm,newLabel,screenCenter)
+                        P.display.update()
 
-                    #print screenWord.metrics(screenWord.get_text())
+                        #print screenWord.metrics(screenWord.get_text())
+    startOver = True
+    while(startOver):
+        for e in P.event.get():
+            if e.type == P.QUIT:
+                # exit the loop if input is quit
+                startOver = False
+            if e.type == P.KEYDOWN:
+                startOver = False
 
 def draw(gm,label,center):
     label_rect = label.get_rect(center=center)

@@ -9,9 +9,9 @@ class Word(pygame.font.Font):
     def __init__(self,letters,text='',font_color=G.WHITE,font=G.MONOSPACE_FONT,font_size=30,(pos_x,pos_y)=(0,0)):
 
         pygame.font.Font.__init__(self, font, font_size)
-        self.text = text
+        self.text = text #string representation of the word object
         self.font = font
-        self.letters = letters
+        self.letters = letters #list of Letter Objects
         self.length = len(letters)
         self.font_color = font_color
         self.font_size = font_size
@@ -70,8 +70,8 @@ class Word(pygame.font.Font):
         self.length = 0
     	self.update()
 
-    def update(self):
-    	self.set_text()
+    def update(self): #sets the text value of the word again to make sure it matches letter object representation. Rerenders the surface.
+    	self.set_text() 
     	self.set_label()
 
     @staticmethod

@@ -7,17 +7,17 @@ pygame.init()
 class Letter(pygame.font.Font):
     def __init__(self,letter,font_color=G.WHITE,font=G.MONOSPACE_FONT,font_size=30,(pos_x,pos_y)=(0,0)):
  
-        pygame.font.Font.__init__(self, font, font_size)
-        self.letter = letter
+        pygame.font.Font.__init__(self, font, font_size) #intialize the font object from super class
+        self.letter = letter #string with letter value eg: "v"
         self.font = font
         self.font_color = font_color
         self.font_size = font_size
-        self.label = self.render(self.letter,1,self.font_color)
-        self.width = self.label.get_rect().width
-        self.height = self.label.get_rect().height
+        self.label = self.render(self.letter,1,self.font_color) #the image that gets put to screen with font_color
+        self.width = self.label.get_rect().width #width of rectangle of label (the image)
+        self.height = self.label.get_rect().height #height of rectangle of label (the image)
         self.dimensions = (self.width, self.height)
-        self.pos_x = pos_x
-        self.pos_y = pos_y
+        self.pos_x = pos_x #position in space x direction
+        self.pos_y = pos_y #position in space y direction
         self.position = pos_x, pos_y
 
     def set_position(self, x, y):
