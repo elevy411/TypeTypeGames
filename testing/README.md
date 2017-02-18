@@ -1,7 +1,4 @@
-#Type Type Games
-Branch for working on the Basic Typing Game
+###All the code is in the Testing Folder
+###The unit tests are there as well (test****.py)
 
-# TypeTypeGames
-Group repo for Software Construction - Winter 2017 Type Type Games Group
-
-###All files in the testing folder
+Rest of Readme is in README.TXT
