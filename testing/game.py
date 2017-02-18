@@ -13,13 +13,13 @@ import basicTyping as BT
 def Difficulty():
     screen = P.display.set_mode(G.DEF_DIMENSIONS, 0, 32)
 
-    menu_items = ("EASY","MEDIUM","HARD","Back","Quit")
+    menu_items = ("Set Difficulty - EASY","Set Difficulty - MEDIUM","Set Difficulty - HARD","Back","Quit")
 
-    funcs = {  "Quit" : sys.exit,
-             "MEDIUM" : G.set_difficulty_medium,
-               "HARD" : G.set_difficulty_hard,
-               "Back" : Settings,
-               "EASY" : G.set_difficulty_easy}
+    funcs = {                   "Quit" : sys.exit,
+             "Set Difficulty - MEDIUM" : G.set_difficulty_medium,
+               "Set Difficulty - HARD" : G.set_difficulty_hard,
+                                "Back" : Settings,
+               "Set Difficulty - EASY" : G.set_difficulty_easy}
     
     P.display.set_caption("Difficulty")
     

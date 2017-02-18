@@ -35,11 +35,14 @@ def draw(gm,label,center):
 def set_difficulty_easy():
 	global DIFFICULTY_LEVEL
 	DIFFICULTY_LEVEL = 1
+	print "Difficulty level is -- {}".format(DIFFICULTY_LEVEL)
 
 def set_difficulty_medium():
 	global DIFFICULTY_LEVEL
 	DIFFICULTY_LEVEL = 2
+	print "Difficulty level is -- {}".format(DIFFICULTY_LEVEL)
 
 def set_difficulty_hard():
 	global DIFFICULTY_LEVEL
 	DIFFICULTY_LEVEL = 3
+	print "Difficulty level is -- {}".format(DIFFICULTY_LEVEL)
