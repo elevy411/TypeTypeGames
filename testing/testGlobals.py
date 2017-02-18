@@ -16,6 +16,7 @@ def test_make_word_list():
     print "no errors in make_word_list"
 
 
+#This was added recently because of the addition of the global function
 def test_set_difficulty():
 	Globals.set_difficulty_medium()
 	assert (Globals.DIFFICULTY_LEVEL == 2), ("set_difficulty_medium failed")
