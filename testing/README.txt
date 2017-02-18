@@ -59,4 +59,10 @@
 
 		Cole and Wesley: Main work was done in starting the implementation of speed (not in this iteration). Also helped in debugging the menu logic. (A good portion of UI update will occur as soon as this deadline passes as Wesley made some nice changes). They also made large contributions in the testing part of the iteration.
 
-		Hadi and Gera: Since Hadi and Gera had less python experience, they were responsible for most of the testing in the early part of the iteration.  
+		Hadi and Gera: Since Hadi and Gera had less python experience, they were responsible for most of the testing in the early part of the iteration and for some of the UI decisions. This iteration was a chance for them to catch up with the code so that they can be more code-intensive in the second iteration
+
+		Leeho and Rohin: Did a lot of the testing in early iteration. Leeho and Rohin also helped to get the settings up and running and although the code isnt technically in use (settings.py), it was a great source for the code that ended up in the game. They additionally helped with some of the planning. 
+
+7. Changes: Mainly small class changes were made (like splitting classes up/ name changes etc.)
+
+8. Nothing else really for the TA to know
