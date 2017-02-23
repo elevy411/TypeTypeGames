@@ -4,8 +4,9 @@ from letter import Letter
 import pygame
 import Globals as G
 
-test_letter = Letter('a', G.WHITE, font, 30, (20, 20))
+test_letter = Letter('a', G.WHITE, font, 30, (20, 20)) #Letter constuctor based on pygame Font which takes in (text,color,font,size,(posx,posy))
 font = pygame.font.Font(None, 30)
+
 
 
 def test_set_get_letter():
@@ -23,7 +24,7 @@ def test_set_get_label():
 
 	# test with changing the render color when setting label
 	# used to be white, but now it's red
-	test_letter1.set_label(G.RED)
+	test_letter.set_label(G.RED)
 
 	letter1_buffer = letter1.get_buffer.raw
 	letter2_buffer = letter2.get_buffer.raw
