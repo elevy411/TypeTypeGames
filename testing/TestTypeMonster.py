@@ -8,45 +8,6 @@ from game import Game
 from menuItem import MenuItem
 from gameMenu import GameMenu
 
-#Ignore this part. Do not have to implement
-#Although I don't think we really have to. Just need test cases?
-class FieldMonsters():
-	def __init__(self, monster_list):
-
-	def tryLetter():
-	def attach(KeyListener):
-	def detach():
-	#Going to assume that this is computeScore, because that's what was in lieu of "poolSort"...
-	def poolSort():
-	def addRandomWord():
-
-
-
-#I'll let you create these...
-#ignore this part as well. do not have to implement
-class Monster():
-	def __init__(self, head, word, monster_list):
-		self.head = head
-		self.word = word
-		self.monster_list = []
-
-	def getHead(self):
-		return self.head
-
-	#Assume that word will update when a letter has been typed?
-	def updateWord(self):
-		self.word.remove_letter()
-
-
-
-	def attach(self, monster_list):
-
-	def detach(self):
-		self.word.remove_letter()
-
-
-
-#TESTS START HERE:
 
 
 #Checks to see if the monster has retrieved the head letter
