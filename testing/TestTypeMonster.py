@@ -8,7 +8,7 @@ from game import Game
 from menuItem import MenuItem
 from gameMenu import GameMenu
 
-#I'll let you create these..
+#Ignore this part. Do not have to implement
 #Although I don't think we really have to. Just need test cases?
 class FieldMonsters():
 	def __init__(self, monster_list):
@@ -23,6 +23,7 @@ class FieldMonsters():
 
 
 #I'll let you create these...
+#ignore this part as well. do not have to implement
 class Monster():
 	def __init__(self, head, word, monster_list):
 		self.head = head
@@ -45,6 +46,8 @@ class Monster():
 
 
 
+#TESTS START HERE:
+
 
 #Checks to see if the monster has retrieved the head letter
 def test_getHead(test_monster):
@@ -54,9 +57,9 @@ def test_getHead(test_monster):
 
 def test_updateWord(test_monster):
 	test_word = test_monster.word
-	save_word = test_word.letters[1:len(test_word)-1]
+	save_word = test_word.letters[1:len(test_word)]
 	test_word.updateWord()
-	assert (save_word[:len(save_word)-1] == test_word.letters[:len(test_word.letters)-1]), 
+	assert (save_word[:len(save_word)] == test_word.letters[:len(test_word.letters)]), 
 	"Word was not updated for" + str(test_word.letters)
 
 
