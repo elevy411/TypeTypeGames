@@ -1,5 +1,6 @@
 import sys
 import pygame as P
+import random
 
 P.init()
 P.font.init()
@@ -27,9 +28,9 @@ DIFFICULTY_LEVEL = 1
 TOP_CENTER = (320,120)
 SCREEN_CENTER = (320,240) 
 
-def make_word_list():
+def make_word_list(wordList='wordList.txt'):
 	global WORDLIST
-	with open('wordList.txt') as f:
+	with open(wordList) as f:
 		WORDLIST = f.read().splitlines()
 	return WORDLIST
 
@@ -51,3 +52,6 @@ def set_difficulty_hard():
 	global DIFFICULTY_LEVEL
 	DIFFICULTY_LEVEL = 3
 	print "Difficulty level is -- {}".format(DIFFICULTY_LEVEL)
+
+def getRandom(inputList):
+	return (random.choice(inputList))
