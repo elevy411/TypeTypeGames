@@ -33,9 +33,9 @@ Explanation for Milestone 4.A:
 
 	testFalling.py: This file is for testing the basic falling mechanisms for the learning/basic typing game. We are testing that words are moving down the screen how we expect them to, and making sure that score is being incremented/decremented appropriately.
 
-	TestTypeMonsters: This file is for testing all the functions related to type vs monsters. This includes making sure that letters are getting detached (typed correctly), and that words are being updated correctly. 
+	TestTypeMonsters.py: This file is for testing all the functions related to type vs monsters. This includes making sure that letters are getting detached (typed correctly), and that words are being updated correctly. 
 
-
+	testTypeWars.py: This file is for testing the functions of typeWars which include making sure health is decremented correctly, that the players indices (which is how to determine score/health decrement) and a WPM calculator for the speed aspect of the game (single player mode). 
 
 Because of the creative nature of the games, the final implementations of the games may be slightly different than the original proposal. I felt that allowing for the people coding the games to have the freedom to implement how they saw fit as opposed to trying to stick my original hastily made plans. I think this is the advantage of working in groups and the advantage of having an open ended game as opposed to something strictly defined.
 

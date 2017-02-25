@@ -16,6 +16,7 @@ import Globals as G
 	 
 	 modifyHealth() #only negate health
 	 modifyIndex()  #increase current index based on words typed 
+   	 calculateWPM() #calculated WPM for player
    }"""
 
 #tests health modification
@@ -41,7 +42,7 @@ def test_WPM_calc(player):
 	typed = player.index
 	time_elapsed = player.counter
 	time_elapsed = time_elapsed / 60
-	WPM = player.calculateWPM
+	WPM = player.calculateWPM()
 
 	assert WPM == typed / time_elapsed 
 
