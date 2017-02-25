@@ -39,7 +39,7 @@ def test_within_range(tword):
     band_pos = ttr.band_pos
     band_range = ttr.band_range
     assert !ttr.within_range(tword), "erroneously considers tword in range"
-    while(tword.pos_y > G.D_HEIGHT){
+    while(tword.pos_y > G.D_HEIGHT):
         if (tword.pos_y > band_pos + band_range or tword.posy < band_pos - band_range):
             assert !ttr.within_range(tword), "erroneously considers tword in range"
         else:

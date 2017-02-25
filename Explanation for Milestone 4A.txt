@@ -1,0 +1,43 @@
+Explanation for Milestone 4.A:
+
+1. Brief description of what is planned to be implemented:
+	We are planning on implmenting the following 4 things:
+		- Type Type Revolution
+		- Type vs Monsters
+		- Type Type Wars/Speed
+		- Type Type Falling/Learning Games (cleaning up Iteration 1)
+
+	Essentially, we are taking the core engine that we created in iteration 1 to work on our individual
+	games with our partners. We will each be implenting the games according to our own intentions/design 
+	thoughts.
+
+	This means implementing the finer logic in each game. Also we will be implementing some of the missing
+	features form the final game like highscores, credits, and finer settings control. 
+
+
+2. The work is being split up by our partners. We each picked the game/task we wanted to work on. 
+
+	Leeho and Rohin are working on Type vs Monsters
+	Gera and Hadi are working on Type Type Wars/Speed
+	Cole and Wesley are working on Type Type Revolution
+	Elliot and Michelle are working on Learning games and overall project management (ensuring everything fits together)
+
+	Basically, I (Elliot) and Michelle will be cleaning up the Iteration 1 code, and making sure to be available to help
+	the other groups with their code for this iteration. Otherwise, we let the individual groups work on how they want to split
+	up their work load. I imagine some groups will choose to have one person code, and the other debug etc.
+
+3. This is an explanation of the unit tests added in this milestone
+
+	typeTypeRevTest.py: This file is for testing the functions that will be used for Type Type revolution. These includes functions
+	such as making sure position is getting updated correctly (test_update_position) and that words have the correct velocity. Lastly, the main test is testing that the word is in the "band" of correctness when being hit. 
+
+	testFalling.py: This file is for testing the basic falling mechanisms for the learning/basic typing game. We are testing that words are moving down the screen how we expect them to, and making sure that score is being incremented/decremented appropriately.
+
+	TestTypeMonsters: This file is for testing all the functions related to type vs monsters. This includes making sure that letters are getting detached (typed correctly), and that words are being updated correctly. 
+
+
+
+Because of the creative nature of the games, the final implementations of the games may be slightly different than the original proposal. I felt that allowing for the people coding the games to have the freedom to implement how they saw fit as opposed to trying to stick my original hastily made plans. I think this is the advantage of working in groups and the advantage of having an open ended game as opposed to something strictly defined.
+
+
+
