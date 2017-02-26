@@ -61,7 +61,6 @@ def typing():
     thingsToDraw.append((currentWordLabel,topCenter))
     thingsToDraw.append((Word.create_word(timeText).get_label(),topRight))
     thingsToDraw.append((Word.create_word('Score: {}'.format(score)).get_label(),topLeft))
-    #G.draw(gm, currentWordLabel, topCenter) # draw first word
     draw_list(thingsToDraw)
     P.display.flip()
     while loop:
@@ -85,7 +84,6 @@ def typing():
                     timeText = "0:0{}".format(timeCount)
                 else:
                     gm.screen.fill(BG_COLOR)
-                    #P.display.update()
                     thingsToDraw = []
                     thingsToDraw.append((Word.create_word('Game Over!').get_label(),screenCenter))
                     thingsToDraw.append((Word.create_word('Press Any Key To Continue').get_label(),(centerX,centerY-100)))
@@ -97,10 +95,8 @@ def typing():
                     break
 
                 timeWord = Word.create_word(timeText)
-                #G.draw(gm,timeWord.get_label(),(topCenter[0]+50,topCenter[1]))
                 thingsToDraw[1] = (timeWord.get_label(),topRight)
                 draw_list(thingsToDraw)
-                #P.display.update()
                 P.display.update()
 
             if e.type == P.KEYDOWN:
@@ -116,13 +112,11 @@ def typing():
                         # clear word typed so far if enter is pressed
                         screenWord.clear()
                         #label = screenWord.get_label()
-                        #G.draw(gm, currentWordLabel, topCenter)
                         currentLetterCount = 0
                         xDifferentials = []
                         thingsToDraw = thingsToDraw[0:3]
                         draw_list(thingsToDraw)
                         P.display.update()
-                        #P.display.update()
                     if e.key == P.K_BACKSPACE:
                         # remove letter from the word being typed if backspace
                         #if currentLetterCount <= 0:
@@ -131,7 +125,6 @@ def typing():
                         thingsToDraw[2] = (Word.create_word('Score: {}'.format(score)).get_label(),topLeft)
                         screenWord.remove_letter()
                         #label = screenWord.get_label()
-                        #G.draw(gm, currentWordToType.get_label(), topCenter)
                         offsetCenter = centerX + ((letterWidth * (screenWord.length - 1)) / 2)
                         if xDifferentials != []:
                             xDifferentials = xDifferentials[:-1]
@@ -143,7 +136,6 @@ def typing():
                             
                             thingsToDraw = thingsToDraw[0:3]
                             for pos,letter in enumerate(screenWord.get_letters()):
-                                #G.draw(gm,letter.get_label(),(offsetCenter-xDifferentials[pos],centerY-25))
                                 thingsToDraw.append((letter.get_label(),(offsetCenter-xDifferentials[pos],centerY-25)))
                             
                             draw_list(thingsToDraw)
@@ -151,7 +143,6 @@ def typing():
                         else:
                             thingsToDraw = thingsToDraw[0:3]
                             for pos,letter in enumerate(screenWord.get_letters()):
-                                #G.draw(gm,letter.get_label(),(screenCenter-xDifferentials[pos],centerY-25))
                                 thingsToDraw.append((letter.get_label(),(screenCenter-xDifferentials[pos],centerY-25)))
                                 draw_list(thingsToDraw)
                                 P.display.update()
@@ -159,7 +150,6 @@ def typing():
                         currentLetterCount -= 1
                         if currentLetterCount < 0:
                             currentLetterCount = 0
-                        #P.display.update()
                     # if e.key == P.K_SPACE:
                     #     screenWord.add_letter(Letter(' '))
                     #     currentLetter = screenWord.get_letters()[currentLetterCount]
@@ -246,9 +236,7 @@ def typing():
                             
                         thingsToDraw = thingsToDraw[0:3]
                         for pos,letter in enumerate(screenWord.get_letters()):
-                            #G.draw(gm,letter.get_label(),(offsetCenter - xDifferentials[pos],centerY-25))
                             thingsToDraw.append((letter.get_label(),(offsetCenter - xDifferentials[pos],centerY-25)))
-                        #G.draw(gm,wordList[nextWord].get_label(),topCenter)
                         thingsToDraw[0] = (wordList[nextWord].get_label(),topCenter)
                         draw_list(thingsToDraw)
                         P.display.update()
@@ -261,3 +249,4 @@ def typing():
                 startOver = False
             if e.type == P.KEYDOWN:
                 startOver = False
+
