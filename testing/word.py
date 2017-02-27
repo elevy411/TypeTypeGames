@@ -75,10 +75,10 @@ class Word(pygame.font.Font):
     	self.set_label()
 
     @staticmethod
-    def create_word(stringWord):
+    def create_word(stringWord, color=G.WHITE):
         letters = []
         for letter in stringWord:
-            letters.append(Letter(letter))
+            letters.append(Letter(letter, color))
         return Word(letters,stringWord)
 
     def equals(self,otherWord):
