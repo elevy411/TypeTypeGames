@@ -133,6 +133,8 @@ def testingSpeed():
 							currently_typing[current_word_idx].set_font_color(G.GREEN)
 							if current_word_idx == len(currently_typing) - 1:
 								thingsToDraw.pop(curr_idx_in_drawlist)
+								for letter in currently_typing:
+									letter.set_font_color(G.WHITE)
 								currently_typing = None
 								current_word_idx = -1
 								# this was the last letter of the word. Remove the word from the list of things to draw
