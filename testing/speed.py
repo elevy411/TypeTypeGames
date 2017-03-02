@@ -110,6 +110,8 @@ def testingSpeed():
 						# if it's empty, then set currently_typing to none
 				elif e.key in range(0,255):
 					key_name = P.key.name(e.key)
+					if P.key.get_mods() in (1,2) or P.key.get_mods() in (4097,4098): #checks for left shift and right shift
+						key_name = key_name.upper()
 
 					if currently_typing is None:
 						# find if there's a word on screen starting with this
@@ -118,6 +120,17 @@ def testingSpeed():
 							# if this word is found, color the first letter green
 							currently_typing[0].set_font_color(G.GREEN)
 							current_word_idx = 0
+
+							if current_word_idx == len(currently_typing) - 1:
+								thingsToDraw.pop(curr_idx_in_drawlist)
+								for letter in currently_typing:
+									letter.set_font_color(G.WHITE)
+								currently_typing = None
+								current_word_idx = -1
+								if len(thingsToDraw) == 0:
+									milliCounter = 0
+
+
 						pass
 						
 					else:
@@ -131,6 +144,8 @@ def testingSpeed():
 									letter.set_font_color(G.WHITE)
 								currently_typing = None
 								current_word_idx = -1
+								if len(thingsToDraw) == 0:
+									milliCounter = 0
 								# this was the last letter of the word. Remove the word from the list of things to draw
 
 						pass

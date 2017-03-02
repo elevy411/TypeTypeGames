@@ -32,6 +32,7 @@ def make_word_list(wordList='wordList.txt'):
 	global WORDLIST
 	with open(wordList) as f:
 		WORDLIST = f.read().splitlines()
+	f.close()
 	return WORDLIST
 
 def draw(gm,label,center):
@@ -51,6 +52,8 @@ def draw_letter_list(gm, letters, center):
 			label_rect = letter.label.get_rect(center=(x0, y))
 			gm.screen.blit(letter.label, label_rect)
 			x0 += letter_width
+	elif num_letters == 1:
+			gm.screen.blit(letters[0].label, letters[0].label.get_rect(center=center))
 
 def set_difficulty_easy():
 	global DIFFICULTY_LEVEL
