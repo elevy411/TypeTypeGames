@@ -12,15 +12,6 @@ P.init()
 
 '''
 
-Known issues:
-
-- Sometimes words take extra long to spawn when the thingstodraw list should be empty
-
-- Still working on handling incorrect inputs (i.e. incorrect keysmash causing out of bounds error)
-
-
-
-
 To implement still
 
 - Scoring
@@ -42,9 +33,6 @@ def testingSpeed():
 	screen = P.display.set_mode((G.D_WIDTH,G.D_HEIGHT),0,32)
 	gm = GameMenu(screen,[],G.SKY_BLUE)
 	words = G.make_word_list('speedWords.txt')
-	#wordList = map(lambda listword: Word.create_word(listword),words)
-	# wordTextList = map(lambda listword: listword.get_text(),words)
-
 	##thingsToDO
 	##spawn a word every x milliseconds (function of difficulty)
 	##set spawn position to different lanes (start with 3)
@@ -93,6 +81,8 @@ def testingSpeed():
 	currently_typing = None
 	current_word_idx = -1
 
+	first_letters = []
+
 
 	while(mainLoop):
 		for e in P.event.get():
@@ -112,6 +102,8 @@ def testingSpeed():
 						# if it's empty, then set currently_typing to none
 				elif e.key in range(0,255):
 					key_name = P.key.name(e.key)
+					if P.key.get_mods() in (1,2) or P.key.get_mods() in (4097,4098): #checks for left shift and right shift
+						key_name = key_name.upper()
 
 					if currently_typing is None:
 						# find if there's a word on screen starting with this
@@ -120,6 +112,21 @@ def testingSpeed():
 							# if this word is found, color the first letter green
 							currently_typing[0].set_font_color(G.GREEN)
 							current_word_idx = 0
+
+							# check if the word is already done being typed
+							if current_word_idx == len(currently_typing) - 1:
+								# remove from draw list 
+								thingsToDraw.pop(curr_idx_in_drawlist)
+
+								# remove its first letter from the first letters list
+								first_letters.remove(currently_typing[0].letter)
+								currently_typing = None
+
+								# if there aren't other things to draw, set the counter to 0 so we spawn a new one
+								if len(thingsToDraw) == 0:
+									milliCounter = 0
+
+
 						pass
 						
 					else:
@@ -129,10 +136,16 @@ def testingSpeed():
 							currently_typing[current_word_idx].set_font_color(G.GREEN)
 							if current_word_idx == len(currently_typing) - 1:
 								thingsToDraw.pop(curr_idx_in_drawlist)
-								for letter in currently_typing:
-									letter.set_font_color(G.WHITE)
+								
+								# remove its first letter from the first letters list
+								first_letters.remove(currently_typing[0].letter)
+
+								# set currently typing to none
 								currently_typing = None
 								current_word_idx = -1
+
+								if len(thingsToDraw) == 0:
+									milliCounter = 0
 								# this was the last letter of the word. Remove the word from the list of things to draw
 
 						pass
@@ -144,13 +157,10 @@ def testingSpeed():
 					pass
 		
 		if milliCounter % (300/G.DIFFICULTY_LEVEL) == 0 or len(thingsToDraw) == 0:
-			nextWord = G.get_no_dup_random(words,wordsOnScreen)
-			if nextWord == False:
-				print 'Out of words'
-				break
-			newWord = Word.create_word(nextWord)
-			wordsOnScreen.append(newWord.get_text())
-			thingsToDraw.append((newWord.letters, (G.get_random(lanes),topY)))
+			new_word = G.get_random_no_dups(words, first_letters)
+			new_word_obj = Word.create_word(new_word)
+			thingsToDraw.append((new_word_obj.letters, (G.getRandom(lanes),topY)))
+			first_letters.append(new_word[0])
 			milliCounter = 0
 		milliCounter += 1
 

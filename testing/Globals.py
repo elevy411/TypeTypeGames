@@ -33,6 +33,7 @@ def make_word_list(wordList='wordList.txt'):
 	global WORDLIST
 	with open(wordList) as f:
 		WORDLIST = f.read().splitlines()
+	f.close()
 	return WORDLIST
 
 def draw(gm,label,center):
@@ -52,6 +53,8 @@ def draw_letter_list(gm, letters, center):
 			label_rect = letter.label.get_rect(center=(x0, y))
 			gm.screen.blit(letter.label, label_rect)
 			x0 += letter_width
+	elif num_letters == 1:
+			gm.screen.blit(letters[0].label, letters[0].label.get_rect(center=center))
 
 def set_difficulty_easy():
 	global DIFFICULTY_LEVEL
@@ -68,20 +71,15 @@ def set_difficulty_hard():
 	DIFFICULTY_LEVEL = 5
 	print "Difficulty level is -- {}".format(DIFFICULTY_LEVEL)
 
-def get_random(inputList):
+def getRandom(inputList):
 	return (random.choice(inputList))
 
-def get_no_dup_random(inputList,badCharList):
-	if len(inputList) == len(badCharList):
+def get_random_no_dups(inputList,firstLetters):
+	if len(inputList) == len(firstLetters):
 		return False
-	if len(inputList) == 1:
-		return inputList[0]
+	
+	filtered = filter(lambda x: x[0] not in firstLetters,inputList)
+	if len(filtered) == 0:
+		return False
 	else:
-		goodChoice = False
-		while not goodChoice:
-			choice = random.choice(inputList)
-			if any(x in choice for x in badCharList):
-				pass
-			else:
-				return choice
-
+		return random.choice(filtered)
