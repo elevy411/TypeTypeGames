@@ -85,6 +85,7 @@ def testingSpeed():
 
 	gm.screen.fill(G.BLACK)
 	P.display.flip()
+	firstLetters = []
 	while(mainLoop):
 		for e in P.event.get():
 			gm.screen.fill(G.BLACK)
@@ -95,7 +96,9 @@ def testingSpeed():
 			if e.type == P.USEREVENT:
 				milliCounter += 1
 				if milliCounter % (300/G.DIFFICULTY_LEVEL) == 0:
-					thingsToDraw.append((G.getRandom(wordList).get_label(),(G.getRandom(lanes),topY)))
+					newWord = G.get_random_no_dups(wordList,firstLetters)
+					firstLetters.append(newWord[0])
+					thingsToDraw.append((G.get_random_no_dups(wordList,firstLetters).get_label(),(G.get_random(lanes),topY)))
 				thingsToDraw = moveDown(thingsToDraw)
 				thingsToDraw = checkDrawList(thingsToDraw)
 				drawList(thingsToDraw)

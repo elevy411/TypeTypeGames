@@ -57,4 +57,18 @@ def get_random(inputList):
 	return (random.choice(inputList))
 
 def get_random_no_dups(inputList,firstLetters):
+	if len(inputList) == len(firstLetters):
+		return False
 	
+	if len(inputList) == 1:
+		return inputList[0]
+	
+	goodChoice = False
+	while not goodChoice:
+		choice = random.choice(inputList)
+		if any(x in choice for x in firstLetters):
+			pass
+		else:
+			goodChoice = True
+	return choice
+
