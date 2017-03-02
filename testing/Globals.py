@@ -1,6 +1,7 @@
 import sys
 import pygame as P
 import random
+from time import sleep
 
 P.init()
 P.font.init()
@@ -24,7 +25,7 @@ SCORE = 0
 D_WIDTH  = 640
 D_HEIGHT = 480
 DEF_DIMENSIONS = (D_WIDTH,D_HEIGHT)
-DIFFICULTY_LEVEL = 1
+DIFFICULTY_LEVEL = 5
 TOP_CENTER = (320,120)
 SCREEN_CENTER = (320,240) 
 
@@ -67,5 +68,20 @@ def set_difficulty_hard():
 	DIFFICULTY_LEVEL = 5
 	print "Difficulty level is -- {}".format(DIFFICULTY_LEVEL)
 
-def getRandom(inputList):
+def get_random(inputList):
 	return (random.choice(inputList))
+
+def get_no_dup_random(inputList,badCharList):
+	if len(inputList) == len(badCharList):
+		return False
+	if len(inputList) == 1:
+		return inputList[0]
+	else:
+		goodChoice = False
+		while not goodChoice:
+			choice = random.choice(inputList)
+			if any(x in choice for x in badCharList):
+				pass
+			else:
+				return choice
+

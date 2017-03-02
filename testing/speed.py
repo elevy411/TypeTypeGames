@@ -42,7 +42,8 @@ def testingSpeed():
 	screen = P.display.set_mode((G.D_WIDTH,G.D_HEIGHT),0,32)
 	gm = GameMenu(screen,[],G.SKY_BLUE)
 	words = G.make_word_list('speedWords.txt')
-	wordList = map(lambda listword: Word.create_word(listword),words)
+	#wordList = map(lambda listword: Word.create_word(listword),words)
+	# wordTextList = map(lambda listword: listword.get_text(),words)
 
 	##thingsToDO
 	##spawn a word every x milliseconds (function of difficulty)
@@ -57,6 +58,7 @@ def testingSpeed():
 	lanes = [centerX-200,centerX-100,centerX,centerX+100,centerX+200]
 	# testWord = Word.create_word("test").get_label()
 	thingsToDraw = []
+	wordsOnScreen = []
 	# for x in lanes:
 	# 	thingsToDraw.append((testWord,(x,centerY)))
 	milliCounter = 0 
@@ -142,17 +144,18 @@ def testingSpeed():
 					pass
 		
 		if milliCounter % (300/G.DIFFICULTY_LEVEL) == 0 or len(thingsToDraw) == 0:
-			newWord = G.getRandom(wordList)
-			thingsToDraw.append((newWord.letters, (G.getRandom(lanes),topY)))
+			nextWord = G.get_no_dup_random(words,wordsOnScreen)
+			if nextWord == False:
+				print 'Out of words'
+				break
+			newWord = Word.create_word(nextWord)
+			wordsOnScreen.append(newWord.get_text())
+			thingsToDraw.append((newWord.letters, (G.get_random(lanes),topY)))
 			milliCounter = 0
 		milliCounter += 1
 
 		thingsToDraw = moveDown(thingsToDraw)
 		thingsToDraw = checkDrawList(thingsToDraw)
-		drawList(thingsToDraw)
-		P.display.update()
-
-
 		drawList(thingsToDraw)
 		P.display.update()
 		clock.tick(60)
