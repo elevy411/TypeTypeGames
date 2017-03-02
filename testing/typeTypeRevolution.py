@@ -40,13 +40,10 @@ def update_position(letter):
     
 def spawn_letter():
     ret = Letter(alphabet[random.randrange(0,26,1)])
-    #letter size is 30, so if spawn with center of object location, start with y = 15
-    ret.pos_y = 15
-    ret.pos_x = random.randrange(30, 610, 30) # gives us number between 30 and 610, in lanes 30 pixels wide
+    # gives us x number between 30 and 610, in lanes 30 pixels wide
+    ret.set_position(random.randrange(30, 610, 30), 0) 
     return ret
   
-#hola mi amigo
-
 def typing():
     loop = True
     
@@ -90,10 +87,12 @@ def typing():
     
     initial_letter = spawn_letter()
     current_letters = [initial_letter]
+    print initial_letter.position
     thingsToDraw.append((initial_letter.get_label(),initial_letter.position))
     
     draw_list(thingsToDraw)
     P.display.flip()
+    
 
     thingsToDraw=[]
     counter = 0
@@ -180,11 +179,12 @@ def typing():
         #add all letters with updated positons to thingsToDraw
         for i in range(len(current_letters)):        
             #print current_letters[i].position
-            current_letters[i].set_label()
             update_position(current_letters[i])
+            current_letters[i].set_label()
             thingsToDraw.append((current_letters[i].get_label(), 
                     current_letters[i].position))
 
         draw_list(thingsToDraw)
+        P.display.update()
         #print thingsToDraw
         thingsToDraw = []
