@@ -6,7 +6,7 @@ import Globals as G
 pygame.init()
 
 class Word(pygame.font.Font):
-    def __init__(self,letters,text='',font_color=G.WHITE,font=G.MONOSPACE_FONT,font_size=30,(pos_x,pos_y)=(0,0)):
+    def __init__(self,letters,text='',font_color=G.WHITE,center=(0,0),font=G.MONOSPACE_FONT,font_size=30,(pos_x,pos_y)=(0,0)):
 
         pygame.font.Font.__init__(self, font, font_size)
         self.text = text #string representation of the word object
@@ -22,6 +22,7 @@ class Word(pygame.font.Font):
         self.pos_x = pos_x
         self.pos_y = pos_y
         self.position = pos_x, pos_y
+        self.center = center
 
     def set_position(self, x, y):
         self.position = (x, y)
@@ -96,3 +97,26 @@ class Word(pygame.font.Font):
     def print_letter_facts(self):
         for letter in self.letters:
             letter.print_facts()
+
+    def get_hash(self):
+        return G.get_hash_id(self.text)
+
+    def draw_by_letters(self,center):
+        numLetters = len(self.letters)
+        hashVal = G.get_hash_id(self.text)
+        letterArray = []
+        if numLetters >= 1:
+            letter_width = self.letters[0].get_width()
+            total_width = numLetters * letter_width
+
+            xPos = center[0] - (total_width/2) + (letter_width/2)
+            yPos = center[1]
+
+            for letter in self.letters:
+                center = (xPos,yPos)
+                #letter_label = letter.get_label() #.get_rect(center=center)
+                letterArray.append((letter,center,hashVal)) #removed label
+                xPos += letter_width
+
+        return letterArray
+

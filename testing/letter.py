@@ -52,7 +52,13 @@ class Letter(pygame.font.Font):
 
     def get_height(self):
         return self.height
-        
+    
+    def recolor(self):
+        self.set_font_color(G.GREEN)
+
+    def uncolor(self):
+        self.set_font_color(G.WHITE)
+
     def print_facts(self):
         print "Value -- {}\n".format(self.letter)
         print "Width -- {}\n".format(self.width)

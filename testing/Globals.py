@@ -1,6 +1,7 @@
 import sys
 import pygame as P
 import random
+import hashlib as HL
 
 P.init()
 P.font.init()
@@ -24,7 +25,7 @@ SCORE = 0
 D_WIDTH  = 640
 D_HEIGHT = 480
 DEF_DIMENSIONS = (D_WIDTH,D_HEIGHT)
-DIFFICULTY_LEVEL = 10
+DIFFICULTY_LEVEL = 1
 TOP_CENTER = (320,120)
 SCREEN_CENTER = (320,240) 
 
@@ -53,6 +54,9 @@ def set_difficulty_hard():
 	DIFFICULTY_LEVEL = 5
 	print "Difficulty level is -- {}".format(DIFFICULTY_LEVEL)
 
+def get_hash_id(string):
+		return int(HL.md5(string).hexdigest(),16)
+
 def get_random(inputList):
 	return (random.choice(inputList))
 
@@ -60,15 +64,8 @@ def get_random_no_dups(inputList,firstLetters):
 	if len(inputList) == len(firstLetters):
 		return False
 	
-	if len(inputList) == 1:
-		return inputList[0]
-	
-	goodChoice = False
-	while not goodChoice:
-		choice = random.choice(inputList)
-		if any(x in choice for x in firstLetters):
-			pass
-		else:
-			goodChoice = True
-	return choice
-
+	filtered = filter(lambda x: x[0] not in firstLetters,inputList)
+	if len(filtered) == 0:
+		return False
+	else:
+		return random.choice(filtered)

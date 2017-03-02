@@ -106,6 +106,8 @@ class GameMenu():
                     mainloop = False
                 if event.type == pygame.KEYDOWN:
                     self.mouse_is_visible = False
+                    if event.key == pygame.K_ESCAPE:
+                        sys.exit()
                     self.set_keyboard_selection(event.key)
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     for item in self.items:
@@ -126,7 +128,7 @@ class GameMenu():
                     self.set_mouse_selection(item, mpos)
                 self.screen.blit(item.label, item.position)
             if self.hasTitle: 
-                gameTitle = Word([],self.title,self.title_color,G.MONOSPACE_FONT,50)
+                gameTitle = Word([],self.title,self.title_color,(0,0),G.MONOSPACE_FONT,50)
                 G.draw(self,gameTitle.get_label(),(G.TOP_CENTER[0],G.TOP_CENTER[1]/1.25))
             
             pygame.display.flip()
