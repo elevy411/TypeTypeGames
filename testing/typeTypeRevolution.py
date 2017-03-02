@@ -1,4 +1,5 @@
 import sys
+from time import sleep
 import pygame as P
 from letter import Letter
 from word import Word
@@ -17,7 +18,7 @@ band_left = (0,360)
 band_right = (640,360)
 #margin of error around band line that will still count as valid
 band_range = 10
-
+FRAMERATE = 60
 
 def reset_velocity(): # using difficulty stored in Globals, we're setting the velocity
     #velocity is defined as number of pixels to shift per refresh
@@ -66,12 +67,14 @@ def typing():
         else:
             return False
     
-    def draw_list(thingsToDraw): # is this at the correct level of indentation?
-        for (label,(x,y)) in thingsToDraw:
+    def draw_list(surfs): # is this at the correct level of indentation?
+        for (label,(x,y)) in surfs:
             G.draw(gm,label,(x,y))
     
     thingsToDraw = []
     
+    centerX = G.SCREEN_CENTER[0]
+    centerY = G.TOP_CENTER[1]
     difficulty_setting = G.DIFFICULTY_LEVEL
     reset_velocity()
     
@@ -91,6 +94,7 @@ def typing():
     
     draw_list(thingsToDraw)
     P.display.flip()
+
     thingsToDraw=[]
     counter = 0
     spawn_letter_interval = 60 # letters will spawn at a constant speed
@@ -100,40 +104,43 @@ def typing():
     
     while loop:
 
-        clock.tick(60)
+        clock.tick(FRAMERATE)
         gm.screen.fill(BG_COLOR)
+
         thingsToDraw.append((Word.create_word('Score: {}'.format(score)).get_label(),topLeft)) # display the current score in the top left
-        print timeText
         thingsToDraw.append((Word.create_word(timeText).get_label(),topRight))
        
         counter += 1 # this counter will be used to determine when to spawn a new letter
         if (counter % spawn_letter_interval == 0): # when the interval between letter spawning has passed
-            print "spawn"
             new_letter = spawn_letter()
             current_letters.append(new_letter)
-        for e in P.event.get(): 
-            gm.screen.fill(BG_COLOR)
-            if e.type == P.QUIT:
-                loop = False
-                break
-   #         if e.type == P.USEREVENT: # code taken (and modified) from basic typing game
+        #see if update time
+        if (counter % FRAMERATE == 0):
             timeCount -= 1
+            print timeCount
             if timeCount >= 10:
                 timeText = "0:{}".format(timeCount)
             elif timeCount >= 0:
                 timeText = "0:0{}".format(timeCount)
             else: 
                 thingsToDraw = []
-                thingsToDraw.append((Word.create_word('Game Over!').get_label(),screenCenter))
+                thingsToDraw.append((Word.create_word('Game Over!').get_label(),topCenter))
                 thingsToDraw.append((Word.create_word('Press Any Key To Continue').get_label(),(centerX,centerY-100)))
                 thingsToDraw.append((Word.create_word('Your Score was {}'.format(score)).get_label(),(centerX,centerY+100)))
                 draw_list(thingsToDraw)
                 P.display.update()
                 loop = False
                 #would like to figure out why sleep
-                sleep(0.5)
+                sleep(2.0)
                 break
                     
+        for e in P.event.get(): 
+            gm.screen.fill(BG_COLOR)
+            if e.type == P.QUIT:
+                loop = False
+                break
+   #         if e.type == P.USEREVENT: # code taken (and modified) from basic typing game
+
             if e.type == P.KEYDOWN: # if the user has pressed a key
                 #user wants to leave this place
                 if e.key== P.K_ESCAPE:
@@ -179,4 +186,5 @@ def typing():
                     current_letters[i].position))
 
         draw_list(thingsToDraw)
+        #print thingsToDraw
         thingsToDraw = []
