@@ -24,7 +24,7 @@ SCORE = 0
 D_WIDTH  = 640
 D_HEIGHT = 480
 DEF_DIMENSIONS = (D_WIDTH,D_HEIGHT)
-DIFFICULTY_LEVEL = 1
+DIFFICULTY_LEVEL = 10
 TOP_CENTER = (320,120)
 SCREEN_CENTER = (320,240) 
 
@@ -53,5 +53,8 @@ def set_difficulty_hard():
 	DIFFICULTY_LEVEL = 5
 	print "Difficulty level is -- {}".format(DIFFICULTY_LEVEL)
 
-def getRandom(inputList):
+def get_random(inputList):
 	return (random.choice(inputList))
+
+def get_random_no_dups(inputList,firstLetters):
+	

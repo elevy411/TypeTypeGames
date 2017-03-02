@@ -54,7 +54,7 @@ def testingSpeed():
 	##call an update function that will print screen
 	##will also move every word on screen down
 	clock = P.time.Clock()
-	P.time.set_timer(P.USEREVENT, 1)
+	P.time.set_timer(P.USEREVENT, 16)
 	centerX = G.SCREEN_CENTER[0]
 	centerY = G.TOP_CENTER[1]
 	topY = 0
@@ -79,7 +79,7 @@ def testingSpeed():
 	def checkDrawList(things): #checks for the word crossing bottom boundary (decrease score etc)
 		for (label,(x,y)) in things:
 			if y > G.D_HEIGHT:
-				print 'deleted'
+				#print 'deleted'
 				return thingsToDraw[1:] # removes the word from the screen
 		return thingsToDraw
 
@@ -94,7 +94,7 @@ def testingSpeed():
 			
 			if e.type == P.USEREVENT:
 				milliCounter += 1
-				if milliCounter % (500/G.DIFFICULTY_LEVEL) == 0:
+				if milliCounter % (300/G.DIFFICULTY_LEVEL) == 0:
 					thingsToDraw.append((G.getRandom(wordList).get_label(),(G.getRandom(lanes),topY)))
 				thingsToDraw = moveDown(thingsToDraw)
 				thingsToDraw = checkDrawList(thingsToDraw)
@@ -109,4 +109,3 @@ def testingSpeed():
 					pass
 		drawList(thingsToDraw)
 		P.display.update()
-		clock.tick(60)
