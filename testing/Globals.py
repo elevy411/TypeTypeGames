@@ -72,3 +72,14 @@ def set_difficulty_hard():
 
 def getRandom(inputList):
 	return (random.choice(inputList))
+
+
+def get_random_no_dups(inputList,firstLetters):
+	if len(inputList) == len(firstLetters):
+		return False
+	
+	filtered = filter(lambda x: x[0] not in firstLetters,inputList)
+	if len(filtered) == 0:
+		return False
+	else:
+		return random.choice(filtered)

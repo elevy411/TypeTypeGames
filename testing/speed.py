@@ -42,7 +42,7 @@ def testingSpeed():
 	screen = P.display.set_mode((G.D_WIDTH,G.D_HEIGHT),0,32)
 	gm = GameMenu(screen,[],G.SKY_BLUE)
 	words = G.make_word_list('speedWords.txt')
-	wordList = map(lambda listword: Word.create_word(listword),words)
+	# wordList = map(lambda listword: Word.create_word(listword),words)
 
 	##thingsToDO
 	##spawn a word every x milliseconds (function of difficulty)
@@ -91,6 +91,8 @@ def testingSpeed():
 	currently_typing = None
 	current_word_idx = -1
 
+	first_letters = []
+
 
 	while(mainLoop):
 		for e in P.event.get():
@@ -121,12 +123,16 @@ def testingSpeed():
 							currently_typing[0].set_font_color(G.GREEN)
 							current_word_idx = 0
 
+							# check if the word is already done being typed
 							if current_word_idx == len(currently_typing) - 1:
+								# remove from draw list 
 								thingsToDraw.pop(curr_idx_in_drawlist)
-								for letter in currently_typing:
-									letter.set_font_color(G.WHITE)
+
+								# remove its first letter from the first letters list
+								first_letters.remove(currently_typing[0].letter)
 								currently_typing = None
-								current_word_idx = -1
+
+								# if there aren't other things to draw, set the counter to 0 so we spawn a new one
 								if len(thingsToDraw) == 0:
 									milliCounter = 0
 
@@ -140,10 +146,14 @@ def testingSpeed():
 							currently_typing[current_word_idx].set_font_color(G.GREEN)
 							if current_word_idx == len(currently_typing) - 1:
 								thingsToDraw.pop(curr_idx_in_drawlist)
-								for letter in currently_typing:
-									letter.set_font_color(G.WHITE)
+								
+								# remove its first letter from the first letters list
+								first_letters.remove(currently_typing[0].letter)
+
+								# set currently typing to none
 								currently_typing = None
 								current_word_idx = -1
+
 								if len(thingsToDraw) == 0:
 									milliCounter = 0
 								# this was the last letter of the word. Remove the word from the list of things to draw
@@ -157,8 +167,10 @@ def testingSpeed():
 					pass
 		
 		if milliCounter % (300/G.DIFFICULTY_LEVEL) == 0 or len(thingsToDraw) == 0:
-			newWord = G.getRandom(wordList)
-			thingsToDraw.append((newWord.letters, (G.getRandom(lanes),topY)))
+			new_word = G.get_random_no_dups(words, first_letters)
+			new_word_obj = Word.create_word(new_word)
+			thingsToDraw.append((new_word_obj.letters, (G.getRandom(lanes),topY)))
+			first_letters.append(new_word[0])
 			milliCounter = 0
 		milliCounter += 1
 
