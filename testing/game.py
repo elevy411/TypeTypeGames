@@ -8,6 +8,7 @@ import Globals as G
 from menuItem import MenuItem
 from gameMenu import GameMenu
 import basicTyping as BT
+import typeTypeRevolution as TTR
 
 
 def Difficulty():
@@ -48,11 +49,12 @@ def Main():
     screen = P.display.set_mode(G.DEF_DIMENSIONS, 0, 32)
     
     #menu_items = ("Start","Quit")
-    menu_items = ("Start","Settings","Quit")
+    menu_items = ("Start","Revolution","Settings","Quit")
     
     funcs = {     "Start": BT.typing,
-              "Settings" : Settings,
-                   "Quit": sys.exit
+            "Revolution": TTR.typing,
+               "Settings" : Settings,
+                    "Quit": sys.exit
     }
  
     P.display.set_caption("Game Menu")

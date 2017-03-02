@@ -46,7 +46,7 @@ def spawn_letter():
   
 #hola mi amigo
 
-def typeLoop():
+def typing():
     loop = True
     
     screen = P.display.set_mode((G.D_WIDTH, G.D_HEIGHT),0,32)
@@ -61,7 +61,7 @@ def typeLoop():
     
 # determine whether a given letter is within the desired band
     def within_range(input_letter):
-        if ( input_letter.pos_y < band_pos + band_range and input_letter.pos_y > band_pos - band_range):
+        if ( input_letter.pos_y > band_pos + band_range and input_letter.pos_y < band_pos - band_range):
             return True
         else:
             return False
@@ -69,7 +69,6 @@ def typeLoop():
     def draw_list(thingsToDraw): # is this at the correct level of indentation?
         for (label,(x,y)) in thingsToDraw:
             G.draw(gm,label,(x,y))
-        return None
     
     thingsToDraw = []
     
@@ -92,46 +91,53 @@ def typeLoop():
     
     draw_list(thingsToDraw)
     P.display.flip()
-    
+    thingsToDraw=[]
     counter = 0
     spawn_letter_interval = 60 # letters will spawn at a constant speed
     
 
-    
-
+    clock = P.time.Clock()
     
     while loop:
+
+        clock.tick(60)
+        gm.screen.fill(BG_COLOR)
+        thingsToDraw.append((Word.create_word('Score: {}'.format(score)).get_label(),topLeft)) # display the current score in the top left
+        print timeText
+        thingsToDraw.append((Word.create_word(timeText).get_label(),topRight))
+       
         counter += 1 # this counter will be used to determine when to spawn a new letter
         if (counter % spawn_letter_interval == 0): # when the interval between letter spawning has passed
+            print "spawn"
             new_letter = spawn_letter()
-            thingsToDraw.append(new_letter.get_label(),new_letter.position) # add a new letter now the list of things to draw. 
+            current_letters.append(new_letter)
         for e in P.event.get(): 
             gm.screen.fill(BG_COLOR)
             if e.type == P.QUIT:
-                loop = false
+                loop = False
                 break
-            if e.type == P.USEREVENT: # code taken (and modified) from basic typing game
-                timeCount -= 1
-                if timeCount >= 10:
-                    timeText = "0:{}".format(timeCount)
-                elif timeCount >= 0:
-                    timeText = "0:0{}".format(timeCount)
-                else: 
-                    thingsToDraw = []
-                    thingsToDraw.append((Word.create_word('Game Over!').get_label(),screenCenter))
-                    thingsToDraw.append((Word.create_word('Press Any Key To Continue').get_label(),(centerX,centerY-100)))
-                    thingsToDraw.append((Word.create_word('Your Score was {}'.format(score)).get_label(),(centerX,centerY+100)))
-                    draw_list(thingsToDraw)
-                    P.display.update()
-                    loop = False
-                    #would like to figure out why sleep
-                    sleep(0.5)
-                    break
+   #         if e.type == P.USEREVENT: # code taken (and modified) from basic typing game
+            timeCount -= 1
+            if timeCount >= 10:
+                timeText = "0:{}".format(timeCount)
+            elif timeCount >= 0:
+                timeText = "0:0{}".format(timeCount)
+            else: 
+                thingsToDraw = []
+                thingsToDraw.append((Word.create_word('Game Over!').get_label(),screenCenter))
+                thingsToDraw.append((Word.create_word('Press Any Key To Continue').get_label(),(centerX,centerY-100)))
+                thingsToDraw.append((Word.create_word('Your Score was {}'.format(score)).get_label(),(centerX,centerY+100)))
+                draw_list(thingsToDraw)
+                P.display.update()
+                loop = False
+                #would like to figure out why sleep
+                sleep(0.5)
+                break
                     
             if e.type == P.KEYDOWN: # if the user has pressed a key
                 #user wants to leave this place
                 if e.key== P.K_ESCAPE:
-                    loop = false
+                    loop = False
                     break
                 #if ASCII, basically
                 elif e.key in range(0,255):
@@ -139,7 +145,7 @@ def typeLoop():
                     #if we decide to throw in capital letters use this
                     #if P.key.get_mods() in (1,2) or P.key.get_mods() in (4097,4098): #checks for left shift and right shift
                         #keyName = keyName.upper()
-                    is_in_band = false
+                    is_in_band = False
                     for character in current_letters:
                         if character.letter == keyName:
                             
@@ -153,19 +159,24 @@ def typeLoop():
                             score -= 5
                         else:
                             score = 0
-                #special non-escape character entered, deduct points for mistyping
+                #special non-ESC character entered, deduct points for mistyping
                 else: 
                     if score - 5 >= 0:
                         score -= 5
                     else:
                         score = 0
-            #add all letters with updated positons to thingsToDraw
-            for i in range(len(current_letters)):
-                update_position(current_letters[i])
-                thingsToDraw.append(current_letters[i], current_letters[i].position)
-                
-                    
-                        
-                        
-                        
-                        
+        #only consider letters that did not fall below band
+        updated_list = [x for x in current_letters if
+            (x.pos_y < band_pos - band_range)]
+        current_letters = updated_list
+
+        #add all letters with updated positons to thingsToDraw
+        for i in range(len(current_letters)):        
+            #print current_letters[i].position
+            current_letters[i].set_label()
+            update_position(current_letters[i])
+            thingsToDraw.append((current_letters[i].get_label(), 
+                    current_letters[i].position))
+
+        draw_list(thingsToDraw)
+        thingsToDraw = []
