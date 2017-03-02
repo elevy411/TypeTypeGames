@@ -12,15 +12,6 @@ P.init()
 
 '''
 
-Known issues:
-
-- Sometimes words take extra long to spawn when the thingstodraw list should be empty
-
-- Still working on handling incorrect inputs (i.e. incorrect keysmash causing out of bounds error)
-
-
-
-
 To implement still
 
 - Scoring
