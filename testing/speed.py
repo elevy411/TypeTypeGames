@@ -67,6 +67,7 @@ def testingSpeed():
 	centerY = G.TOP_CENTER[1]
 	topY = 0
 	lanes = [centerX-200,centerX-100,centerX,centerX+100,centerX+200]
+	difficulty = G.DIFFICULTY_LEVEL
 	
 	# for x in lanes:
 	# 	thingsToDraw.append((testWord,(x,centerY)))
@@ -87,11 +88,11 @@ def testingSpeed():
 			obj = things[i]
 			if type(obj) == tuple:
 				label,(x,y),hashVal = obj
-				newList.append((label,(x,y+0.25*G.DIFFICULTY_LEVEL),hashVal))
+				newList.append((label,(x,y+0.25*difficulty),hashVal))
 			elif type(obj) == list:
 				tList = []
 				for (label,(x,y),hashVal) in obj:
-					tList.append((label,(x,y+0.25*G.DIFFICULTY_LEVEL),hashVal))
+					tList.append((label,(x,y+0.25*difficulty),hashVal))
 				newList.append(tList)
 		return newList
 	
@@ -129,7 +130,7 @@ def testingSpeed():
 		if badIdx == 0:
 			return wordsOnScreen[1:]
 		else:
-			return wordsOnScreen[0:badIdx]+wordsOnScreen[badIdx:]
+			return wordsOnScreen[0:badIdx]+wordsOnScreen[badIdx+1:]
 	#returns the hash id of the word based on val, otherwise -1
 	def checkFirsts(wordsOnScreen,val): 
 		for word,hashID in wordsOnScreen:
@@ -149,7 +150,8 @@ def testingSpeed():
 	firstLetters = []
 	wordsOnScreen = [] #words with hashes
 	thingsToDraw = []
-
+	scoreCount = 0
+	multiplier = 1
 	while(mainLoop):
 		for e in P.event.get():
 			gm.screen.fill(G.BLACK)
@@ -158,11 +160,19 @@ def testingSpeed():
 				break
 			
 			if e.type == P.USEREVENT:
-				# milliCounter += 1
-				# if milliCounter % (300/G.DIFFICULTY_LEVEL) == 0:
-				# 	newWord = G.get_random_no_dups(wordList,firstLetters)
-				# 	firstLetters.append(newWord[0])
-				# 	thingsToDraw.append((G.get_random_no_dups(wordList,firstLetters).get_label(),(G.get_random(lanes),topY)))
+				milliCounter += 1
+				if milliCounter % (300/round(difficulty)) == 0:
+					possibleWord = G.get_random_no_dups(words,firstLetters)
+					if possibleWord == False: #no possible words to generate
+						break
+					newWord = Word.create_word(possibleWord)
+					newText = newWord.get_text()
+					wordsOnScreen.append((newText,G.get_hash_id(newText)))
+					firstLetters.append(newText[0])
+					newLetters = newWord.draw_by_letters((G.get_random(lanes),topY))
+					thingsToDraw.append(newLetters)
+					drawList(thingsToDraw)
+					P.display.update()
 				#print len(thingsToDraw)
 				thingsToDraw = moveDown(thingsToDraw)
 				thingsToDraw = checkDrawList(thingsToDraw)
@@ -182,7 +192,7 @@ def testingSpeed():
 						newText = newWord.get_text()
 						wordsOnScreen.append((newText,G.get_hash_id(newText)))
 						firstLetters.append(newText[0])
-						newLetters = newWord.draw_by_letters((G.get_random(lanes),centerY))
+						newLetters = newWord.draw_by_letters((G.get_random(lanes),topY))
 						thingsToDraw.append(newLetters)
 						drawList(thingsToDraw)
 						P.display.update()
@@ -190,6 +200,8 @@ def testingSpeed():
 						if lockedOn: #we know that hash and locked are set
 							current_letter_idx -= 1
 							thingsToDraw[findByHash(thingsToDraw,currentHash)][current_letter_idx][0].uncolor()
+							drawList(thingsToDraw)
+							P.display.update()
 							if current_letter_idx == 0:
 							# 	firstLetters.remove(lockedOnWord[0])
 							  	resetVals()
@@ -203,6 +215,7 @@ def testingSpeed():
 						keyName = keyName.upper()
 					if not lockedOn:
 						lockedOnWord,currentHash = checkFirsts(wordsOnScreen,keyName)
+						#print 'WOS = {}'.format(wordsOnScreen)
 						if currentHash == -1:
 							pass
 						else: #assuming that all words are drawn letter by letter
@@ -215,9 +228,15 @@ def testingSpeed():
 								wordsOnScreen = removeByHash(wordsOnScreen,currentHash)
 								firstLetters.remove(lockedOnWord[0])
 								resetVals()
+								scoreCount += 1
+								if scoreCount % 3 == 0:
+									multiplier += 0.05
+									difficulty = difficulty*multiplier
+									print 'difficulty increasing'								
 								break
 							break
 					if lockedOn: #this means hash, locked on word are set
+						#print "locked on word is -- " + lockedOnWord
 						if keyName == lockedOnWord[current_letter_idx]:
 							thingsToDraw[findByHash(thingsToDraw,currentHash)][current_letter_idx][0].recolor()
 							current_letter_idx += 1
@@ -227,6 +246,11 @@ def testingSpeed():
 								wordsOnScreen = removeByHash(wordsOnScreen,currentHash)
 								firstLetters.remove(lockedOnWord[0])
 								resetVals()
+								scoreCount += 1
+								if scoreCount % 3 == 0:
+									multiplier += 0.05
+									difficulty = difficulty*multiplier
+									print 'difficulty increasing'
 						else:
 							print 'wrong letter'
 
