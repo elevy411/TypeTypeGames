@@ -33,11 +33,7 @@ def testingSpeed():
 	screen = P.display.set_mode((G.D_WIDTH,G.D_HEIGHT),0,32)
 	gm = GameMenu(screen,[],G.SKY_BLUE)
 	words = G.make_word_list('speedWords.txt')
-	##thingsToDO
-	##spawn a word every x milliseconds (function of difficulty)
-	##set spawn position to different lanes (start with 3)
-	##call an update function that will print screen
-	##will also move every word on screen down
+	P.key.set_repeat(500,50) #so people can hold a key down
 	clock = P.time.Clock()
 	P.time.set_timer(P.USEREVENT, 16)
 	centerX = G.SCREEN_CENTER[0]
@@ -97,7 +93,12 @@ def testingSpeed():
 					break
 				if e.key == P.K_BACKSPACE:
 					if currently_typing is not None:
-						pass
+						currently_typing[current_word_idx].set_font_color(G.WHITE)
+						current_word_idx -= 1
+						if current_word_idx < 0:
+							currently_typing = None
+					else:
+						pass 
 						# remove the last typed in currently_typing
 						# if it's empty, then set currently_typing to none
 				elif e.key in range(0,255):
