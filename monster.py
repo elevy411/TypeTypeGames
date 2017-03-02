@@ -1,20 +1,22 @@
-import sys
-import pygame as P
 from word import Word
 from letter import Letter
-from TypeTest import TypeTest
-import Globals as G
-from game import Game
-from menuItem import MenuItem
-from gameMenu import GameMenu
+import math
 
 class FieldMonsters():
 	def __init__(self, words, n):
 		self.fieldMs = []
 		self.pool = words
 		self.chosen = []
+		angles = list(0, math.pi/2, math.pi, 3 * math.pi/2)
+		r = 1
+		while (2 << r) < n:
+			a = math.pi/(2 << r)
+			while a < 2 * math.pi:
+				angles.append(a)
+				a += 2 * math.pi/(2 << r)
+			r += 1
 		for i in range(n):
-			self.fieldMs.append(self.addRandomWord())
+			self.fieldMs.append(self.addRandomWord(angles[n]))
 
 	def tryLetter(self, letter):
 		for i in self.fieldMs:
@@ -30,19 +32,19 @@ class FieldMonsters():
 				self.fieldMs[i].detach()
 				del self.fieldMs[i]
 
-	def addRandomWord(self):
+	def addRandomWord(self, angle):
 		word = self.pool[Random.randint(len(self.pool))]
 		while word not in self.chosen:
 			word = self.pool[Random.randint(len(self.pool))]
-		word.attach(self)
 		self.chosen.append(word)
-		return word
+		return Monster(word, self, angle)
 
 
 class Monster(Word):
-	def __init__(self, word, fieldMonsters=[]):
+	def __init__(self, word, parent, angle):
 		Word.__init__(self, [Letter(letter) for letter in word], word)
 		self.head = self.get_letters[0]
+		self.angle = angle
 		self.parent = parent
 
 	def getHead(self):
@@ -61,3 +63,6 @@ class Monster(Word):
 
 	def detach(self):
 		self.parent = []
+
+	def set_pos(radius):
+		self.set_position(math.cos(angle) * radius, math.sin(angle) * radius)
