@@ -12,35 +12,14 @@ from gameMenu import GameMenu
 P.init()
 
 '''
-Michelle Things To do:
-
-- We need to have function that keeps track of a words index in list of things to draw
-ie: We have the Word "Test" but we need to actually put
-["T", "E", "S", "T"] in the array if we want to do coloring of the letters as we type.
-
-Im thinking this might be doable with a second array for the letters? The first array will
-have the Word objects and then a tuple containing the indicies of the letters they contain and length? 
-So like if i have the 3 words "Test", "Hello" and "Bye" then we would have 
-			---- [(Test,(0,3),4), (Hello,(4,8),5), (Bye, (9,11),3)]
-			-----[T,E,S,T,H,E,L,L,O,B,Y,E]
-
-When a word gets type correctly, we can call a remove_word function that will find the word from the main list, decrement all future indicies
-by length, and then delete from the, we then delete those indicies from the LetterArray.
-
-
-
-Another idea is to have a sub-draw function that will allows us to draw the letters individually from a word given a screen location for center,
-it will just go through the word and draw each letter. This seems like a much easier way to do it. We could probably just make the change in Word.py to
-have a letterDraw function. It would grab the labels of all the letters in the word, and then loop over them to render in the location we feed it and with
-an array of colors for the letters. This is prob the route I would take.   
-
-- Make a function that will make sure that words generated on screen don't have the same opening 
-letter. This will allow for us to have words falling on screen, and only one word is typable
-at any time given a starting letter. 
-
-	(Im thinking a while loop on a produce random funciton that takes in a list of bad letters)
-
-- Clean up stuff is last thing.     
+- Make one controller for speed of words falling down 
+- Make one controller for speed of generation of words
+- Add Scoring
+- Show Scoring
+- Add Health
+- Show Health
+- Polish word list for better difficulty control
+- clean up code a bit      
 '''
 lockedOnWord = ''
 currentHash = -1
