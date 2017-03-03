@@ -8,7 +8,12 @@ from menuItem import MenuItem
 from gameMenu import GameMenu
 import random
 
+
+P.mixer.pre_init(44100, -16, 2, 2048)
 P.init()
+#P.mixer.music.load("TTR_Files/ClubbingOfIsaac.mp3")
+#P.mixer.music.play(-1)
+
 
 velocity = 1;
 alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
@@ -19,6 +24,17 @@ band_right = (640,360)
 #margin of error around band line that will still count as valid
 band_range = 15
 FRAMERATE = 60
+
+BG_PATH = "TTR_Files/BKG1.jpg"
+
+
+class Background(P.sprite.Sprite):
+    def __init__(self, filepath, coord):
+        P.sprite.Sprite.__init__(self)
+        self.image = P.image.load(filepath)
+        self.rect = self.image.get_rect()
+        self.rect.left, self.rect.top = coord
+
 
 def reset_velocity(): # using difficulty stored in Globals, we're setting the velocity
     #velocity is defined as number of pixels to shift per refresh
@@ -53,10 +69,13 @@ def within_range(input_letter):
 
   
 def typing():
+
     loop = True
     
     screen = P.display.set_mode((G.D_WIDTH, G.D_HEIGHT),0,32)
     gm = GameMenu(screen,[],G.BLACK)
+
+    bkg = Background(BG_PATH, [0,0])
     
     topCenter = G.TOP_CENTER
     topLeft = (topCenter[0]-200,topCenter[1]-50)
@@ -85,6 +104,7 @@ def typing():
     timeText = "1:00"
     
     gm.screen.fill(BG_COLOR)
+    screen.blit(bkg.image, bkg.rect)
     thingsToDraw.append((Word.create_word('Score: {}'.format(score)).get_label(),topLeft)) # display the current score in the top left
     thingsToDraw.append((Word.create_word(timeText).get_label(),topRight))
     
@@ -99,7 +119,7 @@ def typing():
 
     thingsToDraw=[]
     counter = 0
-    spawn_letter_interval = 60 # letters will spawn at a constant speed
+    spawn_letter_interval = 60/G.DIFFICULTY_LEVEL # letters will spawn at a constant speed
     
 
     clock = P.time.Clock()
@@ -108,7 +128,7 @@ def typing():
 
         clock.tick(FRAMERATE)
         gm.screen.fill(BG_COLOR)
-
+        screen.blit(bkg.image,bkg.rect)
         thingsToDraw.append((Word.create_word('Score: {}'.format(score)).get_label(),topLeft)) # display the current score in the top left
         thingsToDraw.append((Word.create_word(timeText).get_label(),topRight))
        
@@ -136,7 +156,6 @@ def typing():
                 break
                     
         for e in P.event.get(): 
-            gm.screen.fill(BG_COLOR)
             if e.type == P.QUIT:
                 loop = False
                 break
