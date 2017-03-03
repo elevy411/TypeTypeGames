@@ -93,6 +93,7 @@ def typing():
     thingsToDraw.append((initial_letter.get_label(),initial_letter.position))
     
     draw_list(thingsToDraw)
+    P.draw.line(screen,G.WHITE,(0,band_pos),(G.D_WIDTH,band_pos))
     P.display.flip()
     
 
@@ -154,8 +155,6 @@ def typing():
                         #keyName = keyName.upper()
                     is_in_band = False
                     for character in current_letters:
-                        #print keyName
-                        #print character.letter
                         if character.letter == keyName:
                             
                             if within_range(character):
@@ -188,5 +187,6 @@ def typing():
                     current_letters[i].position))
 
         draw_list(thingsToDraw)
+        P.draw.line(screen,G.WHITE,(0,band_pos),(G.D_WIDTH,band_pos))
         P.display.update()
         thingsToDraw = []
