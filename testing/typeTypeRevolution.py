@@ -43,6 +43,14 @@ def spawn_letter():
     # gives us x number between 30 and 610, in lanes 30 pixels wide
     ret.set_position(random.randrange(30, 610, 30), 0) 
     return ret
+
+def within_range(input_letter):
+    if ( input_letter.pos_y >= band_pos - band_range and 
+        input_letter.pos_y <= band_pos + band_range):
+        return True
+    else:
+        return False
+
   
 def typing():
     loop = True
@@ -58,12 +66,7 @@ def typing():
     score = G.SCORE
     
 # determine whether a given letter is within the desired band
-    def within_range(input_letter):
-        if ( input_letter.pos_y > band_pos + band_range and input_letter.pos_y < band_pos - band_range):
-            return True
-        else:
-            return False
-    
+        
     def draw_list(surfs): # is this at the correct level of indentation?
         for (label,(x,y)) in surfs:
             G.draw(gm,label,(x,y))
@@ -87,7 +90,6 @@ def typing():
     
     initial_letter = spawn_letter()
     current_letters = [initial_letter]
-    print initial_letter.position
     thingsToDraw.append((initial_letter.get_label(),initial_letter.position))
     
     draw_list(thingsToDraw)
@@ -116,7 +118,6 @@ def typing():
         #see if update time
         if (counter % FRAMERATE == 0):
             timeCount -= 1
-            print timeCount
             if timeCount >= 10:
                 timeText = "0:{}".format(timeCount)
             elif timeCount >= 0:
@@ -153,12 +154,16 @@ def typing():
                         #keyName = keyName.upper()
                     is_in_band = False
                     for character in current_letters:
+                        #print keyName
+                        #print character.letter
                         if character.letter == keyName:
                             
                             if within_range(character):
+                                print "m8"
                                 current_letters.remove(character)
+                                
                                 score += 10
-                                is_in_band = true
+                                is_in_band = True
                                 break
                     if not is_in_band: # deduct 5 points if there is no matching letter within the band
                         if score - 5 >= 0:
@@ -173,12 +178,11 @@ def typing():
                         score = 0
         #only consider letters that did not fall below band
         updated_list = [x for x in current_letters if
-            (x.pos_y < band_pos - band_range)]
+            (x.pos_y <= band_pos + band_range)]
         current_letters = updated_list
 
         #add all letters with updated positons to thingsToDraw
-        for i in range(len(current_letters)):        
-            #print current_letters[i].position
+        for i in range(len(current_letters)):
             update_position(current_letters[i])
             current_letters[i].set_label()
             thingsToDraw.append((current_letters[i].get_label(), 
@@ -186,5 +190,4 @@ def typing():
 
         draw_list(thingsToDraw)
         P.display.update()
-        #print thingsToDraw
         thingsToDraw = []
