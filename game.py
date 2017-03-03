@@ -9,6 +9,7 @@ from menuItem import MenuItem
 from gameMenu import GameMenu
 import basicTyping as BT
 import speed as SP
+import monster as M
 
 
 def Difficulty():
@@ -21,14 +22,14 @@ def Difficulty():
                "Set Difficulty - HARD" : G.set_difficulty_hard,
                                 "Back" : Settings,
                "Set Difficulty - EASY" : G.set_difficulty_easy}
-    
+
     P.display.set_caption("Difficulty")
-    
+
     gm = GameMenu(screen,menu_items,funcs,True,"SET DIFFICULTY")
     gm.run()
 
 def Settings():
-    
+
 
     screen = P.display.set_mode(G.DEF_DIMENSIONS, 0, 32)
 
@@ -36,27 +37,28 @@ def Settings():
 
     funcs = {  "Set Difficulty" : Difficulty,
             "Back to Main Menu" : Main,
-                          "Quit": sys.exit,  
+                          "Quit": sys.exit,
             }
-    
+
     P.display.set_caption("Settings")
-    
+
     gm = GameMenu(screen,menu_items,funcs,True,"SETTINGS")
     gm.run()
 
 def Main():
     # Creating the screen
     screen = P.display.set_mode(G.DEF_DIMENSIONS, 0, 32)
-    
+
     #menu_items = ("Start","Quit")
-    menu_items = ("Start","Settings","Speed Test","Quit")
-    
+    menu_items = ("Start","Settings","Monsters","Speed Test","Quit")
+
     funcs = {     "Start": BT.typing,
               "Settings" : Settings,
+              "Monsters" : M.typing,
              "Speed Test": SP.testingSpeed,
                    "Quit": sys.exit
     }
- 
+
     P.display.set_caption("Game Menu")
     gm = GameMenu(screen, menu_items, funcs, True, "TYPE TYPE GAMES")
     gm.run()

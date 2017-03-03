@@ -155,7 +155,6 @@ def typing():
 	while loop:
 		for e in P.event.get():
 			gm.screen.fill(BG_COLOR)
-			draw_list(thingsToDraw + monsters)
 			if e.type == P.QUIT:
 				# exit the loop if input is quit
 				loop = False
@@ -163,6 +162,7 @@ def typing():
 				break
 			if e.type == P.USEREVENT:
 				timeCount -= 1.0
+				monsters = [(i.get_label(), i.get_pos(r*(timeCount / originaltimeCount))) for i in fieldMsLabel.get_field()]
 
 				#Just the time counter..
 				if timeCount >= 10:
@@ -184,6 +184,7 @@ def typing():
 
 				timeWord = Word.create_word(timeText)
 				thingsToDraw[0] = ((timeWord.get_label(),topRight))
+				draw_list(thingsToDraw + monsters)
 				P.display.update()
 
 			if e.type == P.KEYDOWN:
@@ -218,10 +219,11 @@ def typing():
 								if len(fieldMsLabel.get_field()) < length:
 									score += 30
 
-							monsters = [(i.get_label(), i.get_pos(r*(timeCount / originaltimeCount))) for i in fieldMsLabel.get_field()]
-							P.display.update()
+							monsters = [(i.get_label(), i.get_pos(r * (timeCount / originaltimeCount))) for i in fieldMsLabel.get_field()]
+							# P.display.update()
 
 						thingsToDraw[1] = ((Letter(keyName, LETTER_COLOR_CENTER).get_label(),(320, 240)))
+						draw_list(thingsToDraw + monsters)
 						P.display.update()
 
 	while(startOver):
