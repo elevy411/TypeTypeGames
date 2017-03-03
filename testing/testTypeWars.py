@@ -22,6 +22,7 @@ import TypeWars as T
 
 player1 = T.Player()
 player2 = T.Player()
+
 #tests health modification
 def test_health_mod(): 
 	#get health of player

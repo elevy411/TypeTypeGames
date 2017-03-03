@@ -8,6 +8,7 @@ import Globals as G
 from menuItem import MenuItem
 from gameMenu import GameMenu
 import basicTyping as BT
+import TypeWars as TW
 
 
 def Difficulty():
@@ -48,10 +49,11 @@ def Main():
     screen = P.display.set_mode(G.DEF_DIMENSIONS, 0, 32)
     
     #menu_items = ("Start","Quit")
-    menu_items = ("Start","Settings","Quit")
+    menu_items = ("Start","Settings","Type Wars","Quit")
     
     funcs = {     "Start": BT.typing,
               "Settings" : Settings,
+              "Type Wars": TW.typing,
                    "Quit": sys.exit
     }
  
