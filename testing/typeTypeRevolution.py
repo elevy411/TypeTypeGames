@@ -15,14 +15,14 @@ P.init()
 #P.mixer.music.play(-1)
 
 
-velocity = 1;
+base_velocity = 1;
 alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
     'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'] 
 band_pos = 360 # this will be toward the bottom of the screen
 band_left = (0,360)
 band_right = (640,360)
 #margin of error around band line that will still count as valid
-band_range = 15
+band_range = 30
 FRAMERATE = 60
 
 BG_PATH = "TTR_Files/BKG1.jpg"
@@ -40,18 +40,33 @@ def reset_velocity(): # using difficulty stored in Globals, we're setting the ve
     #velocity is defined as number of pixels to shift per refresh
     global velocity
     if G.DIFFICULTY_LEVEL == 1:
-        velocity = 2
+        base_velocity = 1
     elif G.DIFFICULTY_LEVEL == 2:
-        velocity = 3
+        base_velocity = 1
     elif G.DIFFICULTY_LEVEL == 3:
-        velocity = 4
+        base_velocity = 2
 
 '''
     update_position: updates position of input letter to redraw
     letter: letter whose position to update
 '''
-def update_position(letter): 
-    letter.set_position(letter.pos_x, letter.pos_y + velocity)
+def update_position(letter):
+    speed_boost = 0;
+    if G.DIFFICULTY_LEVEL == 1:
+        if letter.letter > 't': # a quarter of the letters will be faster
+            speed_boost = 1
+    elif G.DIFFICULTY_LEVEL == 2:
+        if letter.letter > 't': # a quarter of the letters will be much faster
+            speed_boost = 2
+        elif letter.letter > 'm': # half the letters will be faster
+            speed_boost = 1
+    elif G.DIFFICULTY_LEVEL == 3:
+        if letter.letter > 't': # a quarter of the letters will be much faster
+            speed_boost = 2
+        elif letter.letter > 'm': # half the letters will be faster
+            speed_boost = 1
+
+    letter.set_position(letter.pos_x, letter.pos_y + base_velocity + speed_boost)
     return None # do we need to return the updated object?
     
 def spawn_letter():
@@ -95,7 +110,7 @@ def typing():
     centerX = G.SCREEN_CENTER[0]
     centerY = G.TOP_CENTER[1]
     difficulty_setting = G.DIFFICULTY_LEVEL
-    reset_velocity()
+    
     
     P.time.set_timer(P.USEREVENT, 1000) # timer set for each second
     
@@ -119,13 +134,13 @@ def typing():
 
     thingsToDraw=[]
     counter = 0
-    spawn_letter_interval = 60/G.DIFFICULTY_LEVEL # letters will spawn at a constant speed
+    spawn_letter_interval = 15 + 30/G.DIFFICULTY_LEVEL # letters will spawn at a constant speed
     
 
     clock = P.time.Clock()
     
     while loop:
-
+        reset_velocity()
         clock.tick(FRAMERATE)
         gm.screen.fill(BG_COLOR)
         screen.blit(bkg.image,bkg.rect)
@@ -181,20 +196,28 @@ def typing():
                                 is_in_band = True
                                 break
                     if not is_in_band: # deduct 5 points if there is no matching letter within the band
-                        if score - 5 >= 0:
-                            score -= 5
+                        if score - 1 >= 0:
+                            score -= 1
                         else:
                             score = 0
                 #special non-ESC character entered, deduct points for mistyping
                 else: 
-                    if score - 5 >= 0:
-                        score -= 5
+                    if score - 1 >= 0:
+                        score -= 1
                     else:
                         score = 0
+
+
+        #deduct points for letters than have fallen below range
+        for x in current_letters:
+            if (x.pos_y > band_pos + band_range):
+                score -= 5
         #only consider letters that did not fall below band
         updated_list = [x for x in current_letters if
             (x.pos_y <= band_pos + band_range)]
         current_letters = updated_list
+        
+        
 
         #add all letters with updated positons to thingsToDraw
         for i in range(len(current_letters)):
