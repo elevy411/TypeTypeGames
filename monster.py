@@ -120,7 +120,7 @@ def typing():
 	xDifferentials = []
 
 
-	P.time.set_timer(P.USEREVENT, 1000)
+	P.time.set_timer(P.USEREVENT, 10)
 	difficulty_setting = G.DIFFICULTY_LEVEL
 
 
@@ -152,7 +152,9 @@ def typing():
 	draw_list(thingsToDraw + monsters)
 	P.display.flip()
 
+	scalar = 0
 	while loop:
+		# P.display.update()
 		for e in P.event.get():
 			gm.screen.fill(BG_COLOR)
 			if e.type == P.QUIT:
@@ -161,9 +163,11 @@ def typing():
 				startOver = False
 				break
 			if e.type == P.USEREVENT:
-				timeCount -= 1.0
-				monsters = [(i.get_label(), i.get_pos(r*(timeCount / originaltimeCount))) for i in fieldMsLabel.get_field()]
-
+				timeCount -= 0.01
+				scalar += 1
+				monsters = [(i.get_label(), i.get_pos(r * timeCount/originaltimeCount)) for i in fieldMsLabel.get_field()]
+				draw_list(thingsToDraw + monsters)
+				P.display.update()
 				#Just the time counter..
 				if timeCount >= 10:
 					timeText = "0:{}".format(timeCount)
@@ -181,11 +185,11 @@ def typing():
 					loop = False
 					sleep(0.5)
 					break
-
-				timeWord = Word.create_word(timeText)
-				thingsToDraw[0] = ((timeWord.get_label(),topRight))
-				draw_list(thingsToDraw + monsters)
-				P.display.update()
+				if scalar % 100 == 0:
+					timeWord = Word.create_word(timeText[:4])
+					thingsToDraw[0] = ((timeWord.get_label(),topRight))
+					draw_list(thingsToDraw + monsters)
+					P.display.update()
 
 			if e.type == P.KEYDOWN:
 				if e.key in G.SPECIAL_KEYS:
