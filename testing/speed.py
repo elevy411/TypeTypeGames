@@ -46,6 +46,23 @@ def testingSpeed():
 	# for x in lanes:
 	# 	thingsToDraw.append((testWord,(x,centerY)))
 	milliCounter = 0 
+
+
+	gm.screen.fill(G.BLACK)
+	P.display.flip()
+
+	currently_typing = None
+	current_word_idx = -1
+
+	first_letters = []
+
+	P.mixer.init()
+	sound_hit_bottom = P.mixer.Sound("./static/HitsBottom.ogg")
+	sound_correct_word = P.mixer.Sound("./static/SpeedCorrectWord.ogg")
+	sound_wrong_letter = P.mixer.Sound("./static/SpeedWrongLetter.ogg")
+
+
+
 	def drawList(thingsToDraw):
 		for (letters, (x, y)) in thingsToDraw:
 			G.draw_letter_list(gm, letters, (x, y))
@@ -57,9 +74,13 @@ def testingSpeed():
 
 		return newList
 	
-	def checkDrawList(things): #checks for the word crossing bottom boundary (decrease score etc)
+	def checkDrawList(things, curr): #checks for the word crossing bottom boundary (decrease score etc)
 		for (letters,(x,y)) in things:
 			if y > G.D_HEIGHT:
+				P.mixer.Sound.play(sound_hit_bottom)
+				if letters == curr:
+					print "currently typing the word that died"
+					currently_typing = None
 				return thingsToDraw[1:] # removes the word from the screen
 		return thingsToDraw
 
@@ -71,15 +92,6 @@ def testingSpeed():
 				return (letters, idx)
 		return (None, -1)
 
-	gm.screen.fill(G.BLACK)
-	P.display.flip()
-
-	currently_typing = None
-	current_word_idx = -1
-
-	first_letters = []
-
-
 	while(mainLoop):
 		for e in P.event.get():
 			gm.screen.fill(G.BLACK)
@@ -88,6 +100,7 @@ def testingSpeed():
 				break
 
 			if e.type == P.KEYDOWN:
+				
 				if e.key == P.K_ESCAPE:
 					mainLoop = False
 					break
@@ -116,6 +129,8 @@ def testingSpeed():
 
 							# check if the word is already done being typed
 							if current_word_idx == len(currently_typing) - 1:
+								# play the sound for completing the word
+								P.mixer.Sound.play(sound_correct_word)
 								# remove from draw list 
 								thingsToDraw.pop(curr_idx_in_drawlist)
 
@@ -126,8 +141,6 @@ def testingSpeed():
 								# if there aren't other things to draw, set the counter to 0 so we spawn a new one
 								if len(thingsToDraw) == 0:
 									milliCounter = 0
-
-
 						pass
 						
 					else:
@@ -136,19 +149,20 @@ def testingSpeed():
 							current_word_idx += 1
 							currently_typing[current_word_idx].set_font_color(G.GREEN)
 							if current_word_idx == len(currently_typing) - 1:
+								# play the sound for completing the word
+								P.mixer.Sound.play(sound_correct_word)
+								# remove from draw list
 								thingsToDraw.pop(curr_idx_in_drawlist)
 								
 								# remove its first letter from the first letters list
 								first_letters.remove(currently_typing[0].letter)
-
-								# set currently typing to none
 								currently_typing = None
-								current_word_idx = -1
 
 								if len(thingsToDraw) == 0:
 									milliCounter = 0
 								# this was the last letter of the word. Remove the word from the list of things to draw
-
+						else: 
+							P.mixer.Sound.play(sound_wrong_letter)
 						pass
 						# check if this is the next letter in the words
 							# if it is, update and color it
@@ -166,7 +180,18 @@ def testingSpeed():
 		milliCounter += 1
 
 		thingsToDraw = moveDown(thingsToDraw)
-		thingsToDraw = checkDrawList(thingsToDraw)
+
+		for (letters, (x,y)) in thingsToDraw:
+			if y > G.D_HEIGHT:
+				P.mixer.Sound.play(sound_hit_bottom)
+				if letters == currently_typing:
+					print "currently typing the word that died"
+					currently_typing = None
+				thingsToDraw = thingsToDraw[1:] # removes the word from the screen
+				curr_idx_in_drawlist -= 1
+
+
+		thingsToDraw = checkDrawList(thingsToDraw, currently_typing)
 		drawList(thingsToDraw)
 		P.display.update()
 		clock.tick(60)
