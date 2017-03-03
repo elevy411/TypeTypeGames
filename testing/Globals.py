@@ -34,6 +34,7 @@ def make_word_list(wordList='wordList.txt'):
 	with open(wordList) as f:
 		WORDLIST = f.read().splitlines()
 	f.close()
+	WORDLIST = map(lambda x: x.lower(),WORDLIST)
 	return WORDLIST
 
 def draw(gm,label,center):

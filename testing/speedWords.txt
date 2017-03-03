@@ -8504,7 +8504,6 @@ Fallopian
 fallout
 fallow
 Falmouth
-false
 falsetto
 falsify
 Falstaff
@@ -23744,7 +23743,6 @@ truckload
 truculent
 trudge
 Trudy
-true
 truffle
 truism
 Truk
