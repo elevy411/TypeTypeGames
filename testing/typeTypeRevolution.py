@@ -159,7 +159,6 @@ def typing():
                         if character.letter == keyName:
                             
                             if within_range(character):
-                                print "m8"
                                 current_letters.remove(character)
                                 
                                 score += 10
