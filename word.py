@@ -71,14 +71,14 @@ class Word(pygame.font.Font):
     	self.update()
 
     def update(self): #sets the text value of the word again to make sure it matches letter object representation. Rerenders the surface.
-    	self.set_text() 
+    	self.set_text()
     	self.set_label()
 
     @staticmethod
-    def create_word(stringWord):
+    def create_word(stringWord, color=G.WHITE):
         letters = []
         for letter in stringWord:
-            letters.append(Letter(letter))
+            letters.append(Letter(letter, color))
         return Word(letters,stringWord)
 
     def equals(self,otherWord):
@@ -96,3 +96,8 @@ class Word(pygame.font.Font):
     def print_letter_facts(self):
         for letter in self.letters:
             letter.print_facts()
+            
+    def pop(self):
+        self.letters = self.letters[1:]
+        self.length = max(0, self.length - 1)
+    	self.update()

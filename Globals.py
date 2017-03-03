@@ -24,7 +24,7 @@ SCORE = 0
 D_WIDTH  = 640
 D_HEIGHT = 480
 DEF_DIMENSIONS = (D_WIDTH,D_HEIGHT)
-DIFFICULTY_LEVEL = 10
+DIFFICULTY_LEVEL = 1
 TOP_CENTER = (320,120)
 SCREEN_CENTER = (320,240) 
 
@@ -37,6 +37,20 @@ def make_word_list(wordList='wordList.txt'):
 def draw(gm,label,center):
     label_rect = label.get_rect(center=center)
     gm.screen.blit(label,label_rect)
+
+def draw_letter_list(gm, letters, center):
+	num_letters = len(letters)
+	if num_letters > 1:
+		letter_width = letters[0].get_width()
+		total_width = num_letters * letter_width
+
+		x0 = center[0] - (total_width / 2) + (letter_width / 2)
+		y = center[1]
+
+		for letter in letters:
+			label_rect = letter.label.get_rect(center=(x0, y))
+			gm.screen.blit(letter.label, label_rect)
+			x0 += letter_width
 
 def set_difficulty_easy():
 	global DIFFICULTY_LEVEL
@@ -53,22 +67,5 @@ def set_difficulty_hard():
 	DIFFICULTY_LEVEL = 5
 	print "Difficulty level is -- {}".format(DIFFICULTY_LEVEL)
 
-def get_random(inputList):
+def getRandom(inputList):
 	return (random.choice(inputList))
-
-def get_random_no_dups(inputList,firstLetters):
-	if len(inputList) == len(firstLetters):
-		return False
-	
-	if len(inputList) == 1:
-		return inputList[0]
-	
-	goodChoice = False
-	while not goodChoice:
-		choice = random.choice(inputList)
-		if any(x in choice for x in firstLetters):
-			pass
-		else:
-			goodChoice = True
-	return choice
-
