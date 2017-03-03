@@ -17,18 +17,18 @@ band_pos = 360 # this will be toward the bottom of the screen
 band_left = (0,360)
 band_right = (640,360)
 #margin of error around band line that will still count as valid
-band_range = 10
+band_range = 15
 FRAMERATE = 60
 
 def reset_velocity(): # using difficulty stored in Globals, we're setting the velocity
     #velocity is defined as number of pixels to shift per refresh
+    global velocity
     if G.DIFFICULTY_LEVEL == 1:
         velocity = 2
     elif G.DIFFICULTY_LEVEL == 2:
         velocity = 3
     elif G.DIFFICULTY_LEVEL == 3:
         velocity = 4
-    return None
 
 '''
     update_position: updates position of input letter to redraw
@@ -156,10 +156,8 @@ def typing():
                     is_in_band = False
                     for character in current_letters:
                         if character.letter == keyName:
-                            
                             if within_range(character):
                                 current_letters.remove(character)
-                                
                                 score += 10
                                 is_in_band = True
                                 break
