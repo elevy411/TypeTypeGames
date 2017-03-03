@@ -3,6 +3,7 @@ import sys
 import pygame as P
 from word import Word
 from letter import Letter
+import math, random
 #from TypeTest import TypeTest
 import Globals as G
 from menuItem import MenuItem
@@ -14,7 +15,7 @@ class FieldMonsters():
 		self.fieldMs = []
 		self.pool = words
 		self.chosen = []
-		angles = list(0, math.pi/2, math.pi, 3 * math.pi/2)
+		angles = [0, math.pi/2, math.pi, 3 * math.pi/2]
 		r = 1
 		while (2 << r) < n:
 			a = math.pi/(2 << r)
@@ -23,12 +24,15 @@ class FieldMonsters():
 				a += 2 * math.pi/(2 << r)
 			r += 1
 		for i in range(n):
-			self.fieldMs.append(self.addRandomWord(angles[n]))
+			self.fieldMs.append(self.addRandomWord(angles[i]))
 
 	def tryLetter(self, letter):
 		for i in self.fieldMs:
 			if letter == i.getHead():
 				i_len = i.updateWord()
+
+	def get_field(self):
+		return self.fieldMs
 
 	def resetChosen(self):
 		self.chosen = []
@@ -38,30 +42,31 @@ class FieldMonsters():
 			if self.fieldMs[i] == monster:
 				self.fieldMs[i].detach()
 				del self.fieldMs[i]
+				return
 
 	def addRandomWord(self, angle):
-		word = self.pool[Random.randint(len(self.pool))]
-		while word not in self.chosen:
-			word = self.pool[Random.randint(len(self.pool))]
+		word = self.pool[random.randint(0, len(self.pool))]
+		while word in self.chosen:
+			word = self.pool[random.randint(0, len(self.pool))]
 		self.chosen.append(word)
-		return Monster(word, self, angle)
+		return Monster(word.get_text(), self, angle)
 
 
 class Monster(Word):
 	def __init__(self, word, parent, angle):
 		Word.__init__(self, [Letter(letter) for letter in word], word)
-		self.head = self.get_letters[0]
+		self.head = self.get_letters()[0]
 		self.angle = angle
 		self.parent = parent
 
 	def getHead(self):
-		return self.head
+		return self.head.letter
 
 	#Assume that word will update when a letter has been typed?
 	def updateWord(self):
 		self.pop()
-		if len(self.get_letters) > 0:
-			self.head = self.get_letters[0]
+		if self.length > 0:
+			self.head = self.get_letters()[0]
 		else:
 			self.parent.delete(self)
 
@@ -71,12 +76,9 @@ class Monster(Word):
 	def detach(self):
 		self.parent = []
 
-	def get_pos(radius):
-		self.set_position(math.cos(angle) * radius, math.sin(angle) * radius)
-		return math.cos(angle) * radius, math.sin(angle) * radius
-
-
-
+	def get_pos(self, radius):
+		self.set_position(math.cos(self.angle) * radius, math.sin(self.angle) * radius)
+		return math.cos(self.angle) * radius + 320, math.sin(self.angle) * radius + 240
 
 P.init()
 
@@ -84,32 +86,27 @@ SCREEN_CENTER = (320,240)
 
 
 def typing():
-	draw_count = 0
 	r = 200
-	fm_Count = 4
 	polarWordPos = math.pi/2.0
 	loop = True
 	startOver = True
 	screen = P.display.set_mode((G.D_WIDTH,G.D_HEIGHT),0,32)
+	BG_COLOR = G.BLACK
 	gm = GameMenu(screen,[],G.BLACK)
 
 	#Initialize screenwords to eventually fill words into
-	screenWord = []
-	for i in range(8):
-		screenWord[i] = Word([])
 	words = G.make_word_list()
 	wordList = map(lambda listword: Word.create_word(listword),words)
 	currentLetterCount = []
-	topCenter = TOP_CENTER
-	leftCenter = LEFT_CENTER
-	rightCenter = RIGHT_CENTER
-	bottomCenter = BOTTOM_CENTER
-
 	#Get 4 words at a time
+	screenCenter = G.SCREEN_CENTER
+	screenWord = Word([])
+	topCenter = G.TOP_CENTER
+	topLeft = (topCenter[0]-200,topCenter[1]-50)
+	topRight = (topCenter[0]+200,topCenter[1]-50)
+	LETTER_COLOR = G.DEF_LETTER_COLOR
 
 	fieldMsLabel = []
-
-
 
 	centerX = screenCenter[0]
 	centerY = screenCenter[1]
@@ -127,38 +124,38 @@ def typing():
 	difficulty_setting = G.DIFFICULTY_LEVEL
 
 
-	timeCount = 60.0
-	originaltimeCount = timeCount
-	timeText = "1:00"
-
 	if difficulty_setting == 1:
-		fm_Count = 3
+		fieldMsLabel = FieldMonsters(wordList, 2)
+		timeCount = 5.00
+		timeText = "0:05"
 	elif difficulty_setting == 2:
-		fm_Count = 5
+		fieldMsLabel = FieldMonsters(wordList, 4)
+		timeCount = 7.00
+		timeText = "0:07"
 	else:
-		fm_Count = 8
+		fieldMsLabel = FieldMonsters(wordList, 8)
+		timeCount = 10.00
+		timeText = "0:10"
 
+	originaltimeCount = timeCount
 	score = G.SCORE
 
 
 	gm.screen.fill(BG_COLOR) # set initial background
 
-	thingsToDraw = [(fieldMsLabel[i].get_label(), fieldMsLabel[i].get_pos(r)) for i in range(fm_Count)]
-
 	#This will be our tracker to see which letter count that all our words are on
-	currentLetterCount[i] = 0
+	# currentLetterCount[i] = 0
 
 	thingsToDraw.append((Word.create_word(timeText).get_label(),topRight))
-	thingsToDraw.append((Word.create_word('Score: {}'.format(score)).get_label(),topLeft))
-	draw_list(thingsToDraw)
+	thingsToDraw.append((Word.create_word('').get_label(), topRight))
+	monsters = [(i.get_label(), i.get_pos(r)) for i in fieldMsLabel.get_field()]
+	draw_list(thingsToDraw + monsters)
 	P.display.flip()
 
 	while loop:
-		thingsToDraw = [(fieldMsLabel[i].get_label(), fieldMsLabel[i].get_pos(r)) for i in range(fm_Count)]
-
-
 		for e in P.event.get():
 			gm.screen.fill(BG_COLOR)
+			draw_list(thingsToDraw + monsters)
 			if e.type == P.QUIT:
 				# exit the loop if input is quit
 				loop = False
@@ -166,14 +163,6 @@ def typing():
 				break
 			if e.type == P.USEREVENT:
 				timeCount -= 1.0
-
-				#For the loop, while the time counts down every second, we will inch the position of the words closer to the center
-				thingsToDraw = [(fieldMsLabel[i].get_label(), fieldMsLabel[i].get_pos(r*(timeCount / originaltimeCount))) for i in range(fm_Count)]
-				for i in range(fm_Count):
-					draw_count += 1
-					fieldMsLabel[i] = fieldMs[i].get_label()
-					xyWordPos = convertPos(r*(timeCount / originaltimeCount))
-					thingsToDraw.append(fieldMsLabel[i], xyWordPos)
 
 				#Just the time counter..
 				if timeCount >= 10:
@@ -194,8 +183,7 @@ def typing():
 					break
 
 				timeWord = Word.create_word(timeText)
-				thingsToDraw[draw_count+1] = (timeWord.get_label(),topRight)
-				draw_list(thingsToDraw)
+				thingsToDraw[0] = ((timeWord.get_label(),topRight))
 				P.display.update()
 
 			if e.type == P.KEYDOWN:
@@ -216,40 +204,24 @@ def typing():
 						if P.key.get_mods() in (1,2) or P.key.get_mods() in (4097,4098): #checks for left shift and right shift
 							keyName = keyName.upper()
 
+						LETTER_COLOR_CENTER = G.RED
 						#Will check all monsters in fieldmonsters
-						for wordmonster in fieldMs:
-
+						for wordmonster in fieldMsLabel.get_field():
 							#Compare keyname with the first letter of the word, and if it ==, then update the word and add +10
+							length = len(fieldMsLabel.get_field())
 							if keyName == wordmonster.getHead():
-								wordmonster.update()
+								wordmonster.updateWord()
 								score += 10
+								LETTER_COLOR_CENTER = G.GREEN
 								#Also, now that we have updated, we want to check if the len is 0. If it is 0, then we will +30 on the sore
 								#And also detach the wordmonster from the list
-								if len(wordmonster.word) == 0:
+								if len(fieldMsLabel.get_field()) < length:
 									score += 30
-									wordmonster.detach()
 
-								#Now let's update the image...
-								thingsToDraw[draw_count+2] = (Word.create_word('Score: {}'.format(score)).get_label(),topLeft)
-								thingsToDraw = thingsToDraw[0:len(thingsToDraw)-1]
-								draw_list(thingsToDraw)
-								P.display.update()
+							monsters = [(i.get_label(), i.get_pos(r*(timeCount / originaltimeCount))) for i in fieldMsLabel.get_field()]
+							P.display.update()
 
-#KEEP WORKING ON CODE FROM THIS POINT ON...
-
-						screenletter = Letter(keyName,LETTER_COLOR)
-
-						letterWidth = screenletter.get_width()
-						xDifferentials = map(lambda x: x + letterWidth,xDifferentials)
-
-
-						offsetCenter = centerX + ((letterWidth * (screenWord.length - 1)) / 2)
-
-						thingsToDraw = thingsToDraw[0:3]
-						for pos,letter in enumerate(screenWord.get_letters()):
-							thingsToDraw.append((letter.get_label(),(offsetCenter - xDifferentials[pos],centerY-25)))
-						thingsToDraw[0] = (wordList[nextWord].get_label(),topCenter)
-						draw_list(thingsToDraw)
+						thingsToDraw[1] = ((Letter(keyName, LETTER_COLOR_CENTER).get_label(),(320, 240)))
 						P.display.update()
 
 	while(startOver):
