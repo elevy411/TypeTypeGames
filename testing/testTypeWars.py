@@ -20,8 +20,8 @@ import TypeWars as T
    	 calculateWPM() #calculated WPM for player
    }"""
 
-player1 = T.Player()
-player2 = T.Player()
+player1 = T.Player("Player 1")
+player2 = T.Player("Player 2")
 
 #tests health modification
 def test_health_mod(): 
