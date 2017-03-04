@@ -102,7 +102,7 @@ def testingSpeed():
 		newList = []
 		for i in range(len(things)):
 			if i != 0:
-				newList.append((things[i][0],(things[i][1][0],things[i][1][1]+0.15*(1 + difficulty/G.DIFFICULTY_LEVEL))))
+				newList.append((things[i][0],(things[i][1][0],things[i][1][1]+0.20*difficulty)))
 		return [things[0]] + newList
 	
 	def checkDrawList(things, curr): #checks for the word crossing bottom boundary (decrease score etc)
