@@ -1,0 +1,15 @@
+How game works:
+2 players
+Player 1 starts the game off by typing a list of words
+Timer is set based on difficulty
+The number of words typed is calculated for the player
+
+Player 2 types the same list that player 1 typed
+Timer is set based on difficulty
+The number of words typed is calculated for the player
+
+Either player 1 or player 2's health is modified after each round
+Whoever typed the least amount of words gets a decrement in health
+If health of either player reaches zero, game is over and other player wins
+
+This continues for rounds until some player reaches zero in health

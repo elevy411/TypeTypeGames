@@ -11,10 +11,11 @@ from gameMenu import GameMenu
 P.init()
 
 class Player():
-    def __init__(self, index=0, counter=0, health=100):
+    def __init__(self, label, index=0, counter=0, health=100):
         self.index = index
         self.counter = counter
         self.health = health
+        self.label = label
 
     def modifyHealth(self, value):
         if self.health == 0 or value > 0:
@@ -46,12 +47,38 @@ class Player():
     def updateCounter(self, value):
         self.counter = value
 
+timeCount = 0
+timeText = "0:00"
+game_round = 1
+endGame = False
+
+def set_time():
+    global timeCount, timeText
+    difficulty_setting = G.DIFFICULTY_LEVEL
+
+    if difficulty_setting == 1:
+        timeCount = 60
+        timeText = "1:00"
+    elif difficulty_setting == 2:
+        timeCount = 30
+        timeText = "0:30"
+    else:
+        timeCount = 15
+        timeText = "0:15"
+
+player1 = Player("Player 1")
+player2 = Player("Player 2")
+
+player = player1
+gameOver = False
+
 
 def typing():
+    global timeCount, timeText, game_round, player1, player2, endGame, player, gameOver
     loop = True
-    startOver = True
+    startOver = True 
     screen = P.display.set_mode((G.D_WIDTH,G.D_HEIGHT),0,32)
-    gm = GameMenu(screen,[],G.BLACK)   
+    gm = GameMenu(screen,[],G.BLACK)
     screenWord = Word([])
     words = G.make_word_list()  #change to certain list based on difficulty level
     wordList = map(lambda listword: Word.create_word(listword),words)
@@ -71,9 +98,6 @@ def typing():
     centerX = screenCenter[0]
     centerY = screenCenter[1]
 
-    player1 = Player()
-    player2 = Player()
-
     def draw_list(thingsToDraw):
         for (label,(x,y)) in thingsToDraw:
             G.draw(gm,label,(x,y))
@@ -83,25 +107,15 @@ def typing():
     xDifferentials = []
     
     P.time.set_timer(P.USEREVENT, 1000) # timer set for each second
-    difficulty_setting = G.DIFFICULTY_LEVEL
-    
-    if difficulty_setting == 1:
-        timeCount = 60
-        timeText = "1:00"
-    elif difficulty_setting == 2:
-        timeCount = 30
-        timeText = "0:30"
-    else:
-        timeCount = 15
-        timeText = "0:15"
+    set_time()
 
     #score = G.SCORE
 
     gm.screen.fill(BG_COLOR) # set initial background
     thingsToDraw.append((currentWordLabel,topCenter))
     thingsToDraw.append((Word.create_word(timeText).get_label(),topRight))
-    thingsToDraw.append((Word.create_word('Health: {}'.format(player1.health)).get_label(),topLeft))
-    thingsToDraw.append((Word.create_word('Player 1').get_label(),(topCenter[0]-200,topCenter[1]-80)))
+    thingsToDraw.append((Word.create_word('Health: {}'.format(player.health)).get_label(),topLeft))
+    thingsToDraw.append((Word.create_word(player.label).get_label(),(topCenter[0]-200,topCenter[1]-80)))
     draw_list(thingsToDraw)
     P.display.flip()
     while loop:
@@ -116,6 +130,7 @@ def typing():
                 # exit the loop if input is quit
                 loop = False
                 startOver = False
+                endGame = True
                 break
             if e.type == P.USEREVENT:
                 timeCount -= 1
@@ -125,15 +140,44 @@ def typing():
                     timeText = "0:0{}".format(timeCount)
                 else:
                     gm.screen.fill(BG_COLOR)
-                    thingsToDraw = []
-                    thingsToDraw.append((Word.create_word('Round Over!').get_label(),screenCenter))
-                    thingsToDraw.append((Word.create_word('Press Any Key To Continue').get_label(),(centerX,centerY-100)))
-                    thingsToDraw.append((Word.create_word('Your Health was {}'.format(player1.health)).get_label(),(centerX,centerY+100)))
-                    thingsToDraw.append((Word.create_word('You typed {} words'.format(player1.index)).get_label(),(centerX,centerY+150)))
-                    draw_list(thingsToDraw)
+                    thingsToDraw2 = []
+
+                    if (game_round % 2 == 0):
+                        thingsToDraw2.append((Word.create_word('Round Over!').get_label(),screenCenter))
+                    else:
+                        thingsToDraw2.append((Word.create_word("Next Player's Turn!").get_label(),screenCenter))
+                    thingsToDraw2.append((Word.create_word('Press Any Key To Continue').get_label(),(centerX,centerY-100)))
+                    thingsToDraw2.append((Word.create_word('You typed {} words'.format(player.index)).get_label(),(centerX,centerY+150)))
+
+                    if (game_round % 2 == 0):
+                        diff1 = player1.index - player2.index
+                        diff2 = player2.index - player1.index
+
+                        if (diff1 > diff2):
+                            player2.modifyHealth(diff2)
+                            thingsToDraw2.append((Word.create_word('Player 1 won the round').get_label(),(centerX,centerY+30)))
+
+                        if (diff2 > diff1):
+                            player1.modifyHealth(diff1)
+                            thingsToDraw2.append((Word.create_word('Player 2 won the round').get_label(),(centerX,centerY+30)))
+
+                        player1.resetIndex()
+                        player2.resetIndex()
+
+                    thingsToDraw2.append((Word.create_word('Your Health is {}'.format(player.health)).get_label(),(centerX,centerY+100)))
+
+                    game_round += 1
+
+                    if (game_round % 2 == 0):
+                        player = player2
+                    else:
+                        player = player1
+
+                    draw_list(thingsToDraw2)
                     P.display.update()
                     loop = False
                     sleep(0.5)
+                    break
 
                 timeWord = Word.create_word(timeText)
                 thingsToDraw[1] = (timeWord.get_label(),topRight)
@@ -148,6 +192,7 @@ def typing():
                         # exit loop if escape
                         loop = False
                         startOver = False
+                        endGame = True
                         break
                     if e.key == P.K_RETURN:
                         # clear word typed so far if enter is pressed
@@ -162,10 +207,10 @@ def typing():
                         # remove letter from the word being typed if backspace
                         #if currentLetterCount <= 0:
                          #   currentLetter = 0 
-                        player1.modifyHealth(-2)
-                        thingsToDraw[2] = (Word.create_word('Health: {}'.format(player1.health)).get_label(),topLeft)
+                        thingsToDraw[2] = (Word.create_word('Health: {}'.format(player.health)).get_label(),topLeft)
                         screenWord.remove_letter()
                         #label = screenWord.get_label()
+
                         offsetCenter = centerX + ((letterWidth * (screenWord.length - 1)) / 2)
                         if xDifferentials != []:
                             xDifferentials = xDifferentials[:-1]
@@ -243,11 +288,30 @@ def typing():
                         if currentLetterCount < currentWordToType.length and \
                            keyName == wordList[nextWord].get_text()[currentLetterCount]:
                             LETTER_COLOR = G.GREEN
-                            thingsToDraw[2] = (Word.create_word('Health: {}'.format(player1.health)).get_label(),topLeft)
+                            thingsToDraw[2] = (Word.create_word('Health: {}'.format(player.health)).get_label(),topLeft)
                         else:
                             LETTER_COLOR = G.RED
-                            player1.modifyHealth(-5)
-                            thingsToDraw[2] = (Word.create_word('Health: {}'.format(player1.health)).get_label(),topLeft)
+                            player.modifyHealth(-5)
+                            thingsToDraw[2] = (Word.create_word('Health: {}'.format(player.health)).get_label(),topLeft)
+
+                            if (player.health == 0):
+                                gm.screen.fill(BG_COLOR)
+                                thingsToDraw3 = []
+                                thingsToDraw3.append((Word.create_word('Game Over!').get_label(),screenCenter))
+                                thingsToDraw3.append((Word.create_word('Press Any Key To Continue').get_label(),(centerX,centerY-100)))
+                                thingsToDraw3.append((Word.create_word('Your Health is 0').get_label(),(centerX,centerY+100)))
+                                if (player.label == "Player 1"):
+                                    thingsToDraw3.append((Word.create_word("Player 2 Won!").get_label(),(centerX,centerY+30)))
+                                else:
+                                    thingsToDraw3.append((Word.create_word("Player 1 Won!").get_label(),(centerX,centerY+30)))
+
+                                draw_list(thingsToDraw3)
+                                P.display.update()
+
+                                loop = False
+                                endGame = True
+                                sleep(0.5)
+                                break
 
                         screenWord.add_letter( Letter(keyName,LETTER_COLOR) )
                         currentLetter = screenWord.get_letters()[currentLetterCount]
@@ -258,8 +322,8 @@ def typing():
                         xDifferentials.append(0)
 
                         if (screenWord.equals(currentWordToType)):
-                            player1.modifyIndex(1)
-                            thingsToDraw[2] = (Word.create_word('Health: {}'.format(player1.health)).get_label(),topLeft)
+                            player.modifyIndex(1)
+                            thingsToDraw[2] = (Word.create_word('Health: {}'.format(player.health)).get_label(),topLeft)
                             nextWord += 1
                             currentLetterCount = 0
                             letterWidth = 0
@@ -270,6 +334,7 @@ def typing():
                                 G.draw(gm,Word.create_word('Press Any Key To Continue').get_label(),(centerX,centerY-100))
                                 P.display.update()
                                 loop = False
+                                endGame = True
                                 break
 
                         offsetCenter = centerX + ((letterWidth * (screenWord.length - 1)) / 2)
@@ -280,12 +345,60 @@ def typing():
                         thingsToDraw[0] = (wordList[nextWord].get_label(),topCenter)
                         draw_list(thingsToDraw)
                         P.display.update()
-
     while(startOver):
         sleep(0.5)
         for e in P.event.get():
             if e.type == P.QUIT:
                 # exit the loop if input is quit
                 startOver = False
+                endGame = True
             if e.type == P.KEYDOWN:
-                startOver = False    
+                startOver = False
+                if e.key == P.K_ESCAPE:
+                    # exit loop if escape
+                    endGame = True
+
+                if (player1.health == 0):
+                    player = player1
+                    gameOver = True
+                if (player2.health == 0):
+                    player = player2
+                    gameOver = True
+
+                if gameOver:
+                    gm.screen.fill(BG_COLOR)
+                    thingsToDraw3 = []
+                    thingsToDraw3.append((Word.create_word('Game Over!').get_label(),screenCenter))
+                    thingsToDraw3.append((Word.create_word('Press Any Key To Continue').get_label(),(centerX,centerY-100)))
+                    thingsToDraw3.append((Word.create_word('Your Health is 0').get_label(),(centerX,centerY+100)))
+                    if (player.label == "Player 1"):
+                        thingsToDraw3.append((Word.create_word("Player 2 Won!").get_label(),(centerX,centerY+30)))
+                    else:
+                        thingsToDraw3.append((Word.create_word("Player 1 Won!").get_label(),(centerX,centerY+30)))
+
+                    draw_list(thingsToDraw3)
+                    P.display.update()
+                    sleep(0.5)
+
+
+def type_war():
+    global endGame, player1, player2, gameOver
+    while not endGame:
+        typing()
+        while gameOver:
+            sleep(0.5)
+            for e in P.event.get():
+                if e.type == P.QUIT:
+                    endGame = True
+                    gameOver = False
+                if e.type == P.KEYDOWN:
+                    endGame = True
+                    gameOver = False
+
+    endGame = False
+    gameOver = False
+    game_round = 1
+    player1.resetIndex()
+    player2.resetIndex()
+    player1.resetHealth()
+    player2.resetHealth()

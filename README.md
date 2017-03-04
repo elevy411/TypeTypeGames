@@ -1,4 +1,3 @@
-###All the code is in the Testing Folder
-###The unit tests are there as well (test****.py)
+###TypeType Games
 
-Rest of Readme is in README.TXT in testing folder
+Branch for working on the game Type Wars

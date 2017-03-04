@@ -53,7 +53,7 @@ def Main():
     
     funcs = {     "Start": BT.typing,
               "Settings" : Settings,
-              "Type Wars": TW.typing,
+              "Type Wars": TW.type_war,
                    "Quit": sys.exit
     }
  
