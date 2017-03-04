@@ -14,8 +14,6 @@ P.init()
 #P.mixer.music.load("TTR_Files/ClubbingOfIsaac.mp3")
 #P.mixer.music.play(-1)
 
-
-base_velocity = 1;
 alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
     'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'] 
 band_pos = 360 # this will be toward the bottom of the screen
@@ -28,6 +26,7 @@ FRAMERATE = 60
 BG_PATH = "TTR_Files/BKG1.jpg"
 
 
+
 class Background(P.sprite.Sprite):
     def __init__(self, filepath, coord):
         P.sprite.Sprite.__init__(self)
@@ -35,10 +34,11 @@ class Background(P.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.left, self.rect.top = coord
 
+base_velocity = 1
 
 def reset_velocity(): # using difficulty stored in Globals, we're setting the velocity
     #velocity is defined as number of pixels to shift per refresh
-    global velocity
+    global base_velocity
     if G.DIFFICULTY_LEVEL == 1:
         base_velocity = 1
     elif G.DIFFICULTY_LEVEL == 2:
@@ -51,17 +51,18 @@ def reset_velocity(): # using difficulty stored in Globals, we're setting the ve
     letter: letter whose position to update
 '''
 def update_position(letter):
+    reset_velocity()
     speed_boost = 0;
     if G.DIFFICULTY_LEVEL == 1:
         if letter.letter > 't': # a quarter of the letters will be faster
             speed_boost = 1
     elif G.DIFFICULTY_LEVEL == 2:
-        if letter.letter > 't': # a quarter of the letters will be much faster
+        if letter.letter > 't': # a quarter of the letters will be much faster (diff = 2)
             speed_boost = 2
         elif letter.letter > 'm': # half the letters will be faster
             speed_boost = 1
     elif G.DIFFICULTY_LEVEL == 3:
-        if letter.letter > 't': # a quarter of the letters will be much faster
+        if letter.letter > 't': # a quarter of the letters will be much faster (diff = 3)
             speed_boost = 2
         elif letter.letter > 'm': # half the letters will be faster
             speed_boost = 1
@@ -167,7 +168,7 @@ def typing():
                 P.display.update()
                 loop = False
                 #would like to figure out why sleep
-                sleep(2.0)
+                sleep(5.0)
                 break
                     
         for e in P.event.get(): 
