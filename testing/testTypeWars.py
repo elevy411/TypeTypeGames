@@ -3,6 +3,7 @@ import pygame as P
 from word import Word
 from letter import Letter
 import Globals as G
+import TypeWars as T
 
 #+all import statements necessary 
 
@@ -19,36 +20,50 @@ import Globals as G
    	 calculateWPM() #calculated WPM for player
    }"""
 
-#tests health modification
-def test_health_mod(player): 
-	#get health of player
-	health = player.health
-	player.modifyHealth(-1)
-	assert health - 1 == player.health
+player1 = T.Player("Player 1")
+player2 = T.Player("Player 2")
 
-	player.modifyHealth(-4)
-	assert health - 5 == player.health
+#tests health modification
+def test_health_mod(): 
+	#get health of player
+	health = player1.health
+	player1.modifyHealth(-1)
+	assert health - 1 == player1.health
+
+	player1.modifyHealth(-4)
+	assert health - 5 == player1.health
 
 	#once player loses more than 100 health, 0
-	player.modifyHealth(-96)
-	assert 0 == player.health
+	player1.modifyHealth(-96)
+	assert 0 == player1.health
 
 	#can't gain health, modifyHealth() only takes - ints
-	player.modifyHealth(20)
-	assert 0 == player.health
+	player1.modifyHealth(20)
+	assert 0 == player1.health
+
+	print "modifyHealth test passed"
+
 
 #tests WPM calculation
-def test_WPM_calc(player):
-	typed = player.index
-	time_elapsed = player.counter
-	time_elapsed = time_elapsed / 60
-	WPM = player.calculateWPM()
+def test_WPM_calc():
+	player1.modifyIndex(20)
+	typed = player1.index
+	player1.updateCounter(30)
+	time_elapsed = player1.counter
+	time_elapsed = float(time_elapsed) / 60
+	WPM = player1.calculateWPM()
 
 	assert WPM == typed / time_elapsed 
+	print "calculateWPM test passed"
+
 
 #tests if typical combat sequence works
-def test_combat(player1, player2):
+def test_combat():
+	player1.resetHealth()
+	player2.resetHealth()
+	player1.modifyIndex(20)
 	index1 = player1.index
+	player2.modifyIndex(30)
 	index2 = player2.index
 	diff1 = index1 - index2
 	diff2 = index2 - index1
@@ -60,25 +75,25 @@ def test_combat(player1, player2):
 	player2.modifyHealth(diff2)
 
 	if diff1 < 0:
-		assert health1 - diff1 = player1.health
+		assert health1 + diff1 == player1.health
+		print "combat test passed"
 	if diff2 < 0:
-		assert health2 - diff2 == player2.health
+		assert health2 + diff2 == player2.health
+		print "combat test passed"
 
 #tests if index modification works
-def test_index(player):
-	typed = player.index
+def test_index():
+	typed = player1.index
 
-	player.modifyIndex(10)
-	assert typed + 10 = player.index
+	player1.modifyIndex(10)
+	assert typed + 10 == player1.index
 
-	player.modifyIndex(100)
-	assert typed + 110 = player.index
-
-
-
+	player1.modifyIndex(100)
+	assert typed + 110 == player1.index
+	print "modifyIndex test passed"
 
 
-
-
-
-
+test_health_mod()
+test_WPM_calc()
+test_combat()
+test_index()
