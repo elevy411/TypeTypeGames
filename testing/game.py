@@ -9,6 +9,7 @@ from menuItem import MenuItem
 from gameMenu import GameMenu
 import basicTyping as BT
 import speed as SP
+import TypeWars as TW
 
 
 def Difficulty():
@@ -48,12 +49,13 @@ def Main():
     # Creating the screen
     screen = P.display.set_mode(G.DEF_DIMENSIONS, 0, 32)
     
-    #menu_items = ("Start","Quit")
-    menu_items = ("Start","Settings","Speed Test","Quit")
+    #menu_items = ("Basic Typing","Quit")
+    menu_items = ("Basic Typing","Settings","Falling Words","TypeWars","Quit")
     
-    funcs = {     "Start": BT.typing,
+    funcs = {     "Basic Typing": BT.typing,
               "Settings" : Settings,
-             "Speed Test": SP.testingSpeed,
+             "Falling Words": SP.testingSpeed,
+             "TypeWars" : TW.typing,
                    "Quit": sys.exit
     }
  
