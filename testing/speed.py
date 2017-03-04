@@ -52,9 +52,14 @@ def testingSpeed():
 	# 	thingsToDraw.append((testWord,(x,centerY)))
 	milliCounter = 0 
 
-	difficulty = G.DIFFICULTY_LEVEL
-	score = G.SCORE
+	if G.DIFFICULTY_LEVEL == 1:
+		difficulty = 1.5
+	else:
+		difficulty = G.DIFFICULTY_LEVEL
+	
+	score = 0.0
 	health = 5
+	multCount = 0
 
 	scoreWord = Word([],"Score: {}".format(score),G.RED,G.MONOSPACE_FONT,25).get_label()
 	healthWord = Word([],"Health: {}".format(health),G.RED,G.MONOSPACE_FONT,25).get_label()	
@@ -97,7 +102,7 @@ def testingSpeed():
 		newList = []
 		for i in range(len(things)):
 			if i != 0:
-				newList.append((things[i][0],(things[i][1][0],things[i][1][1]+0.20*G.DIFFICULTY_LEVEL)))
+				newList.append((things[i][0],(things[i][1][0],things[i][1][1]+0.15*(1 + difficulty/G.DIFFICULTY_LEVEL))))
 		return [things[0]] + newList
 	
 	def checkDrawList(things, curr): #checks for the word crossing bottom boundary (decrease score etc)
@@ -179,6 +184,9 @@ def testingSpeed():
 
 								score += 10*difficulty
 								updateScore()
+								multCount += 1
+								if multCount % 5 == 0:
+									difficulty += .25 
 						pass
 						
 					else:
@@ -201,6 +209,9 @@ def testingSpeed():
 
 								score += 10*difficulty
 								updateScore()
+								multCount += 1
+								if multCount % 10 == 0:
+									difficulty += .5
 								# this was the last letter of the word. Remove the word from the list of things to draw
 						else: 
 							#P.mixer.Sound.play(sound_wrong_letter)
@@ -212,7 +223,7 @@ def testingSpeed():
 				else:
 					pass
 		
-		if milliCounter % (300/G.DIFFICULTY_LEVEL) == 0 or len(thingsToDraw) == 0:
+		if milliCounter % (300/round(difficulty)) == 0 or len(thingsToDraw) == 1:
 			new_word = G.get_random_no_dups(words, first_letters)
 			new_word_obj = Word.create_word(new_word)
 			thingsToDraw.append((new_word_obj.letters, (G.getRandom(lanes),topY)))
@@ -253,7 +264,7 @@ def testingSpeed():
 	while gameOver:
 		gm.screen.fill(G.BLACK)
 		G.draw(gm,Word.create_word("GAME OVER").get_label(),(centerX,centerY))
-		G.draw(gm,Word.create_word('Press Any Key To Continue').get_label(),(centerX,centerY-100))
+		G.draw(gm,Word.create_word('Press ESCAPE').get_label(),(centerX,centerY-100))
 		G.draw(gm,Word.create_word('Final Score: {}'.format(score)).get_label(),(centerX,centerY+100))
 		P.display.update()
 
