@@ -57,7 +57,7 @@ def Main():
     funcs = {     "Basic Typing": BT.typing,
               "Settings" : Settings,
              "Falling Words": SP.testingSpeed,
-             "TypeWars" : TW.typing,
+             "TypeWars" : TW.type_war,
              "Type Type Revolution" : TTR.typing,
              "Type Vs Monster" : M.typing,
                    "Quit": sys.exit
