@@ -169,15 +169,23 @@ def typing():
 				draw_list(thingsToDraw + monsters)
 				P.display.update()
 				#Just the time counter..
+
+				if scalar % 100 == 0:
+					timeWord = Word.create_word(timeText[:4])
+					thingsToDraw[0] = ((timeWord.get_label(),topRight))
+					draw_list(thingsToDraw + monsters)
+					P.display.update()
+
 				if timeCount >= 10:
 					timeText = "0:{}".format(timeCount)
 				elif timeCount >= 0:
 					timeText = "0:0{}".format(timeCount)
+
 				else:
 					#If the time counter is out, then end the game.
 					gm.screen.fill(BG_COLOR)
 					thingsToDraw = []
-					thingsToDraw.append((Word.create_word('Game Over!').get_label(),screenCenter))
+					thingsToDraw.append((Word.create_word('Game Over! You Lose').get_label(),screenCenter))
 					thingsToDraw.append((Word.create_word('Press Any Key To Continue').get_label(),(centerX,centerY-100)))
 					thingsToDraw.append((Word.create_word('Your Score was {}'.format(score)).get_label(),(centerX,centerY+100)))
 					draw_list(thingsToDraw)
@@ -185,11 +193,6 @@ def typing():
 					loop = False
 					sleep(0.5)
 					break
-				if scalar % 100 == 0:
-					timeWord = Word.create_word(timeText[:4])
-					thingsToDraw[0] = ((timeWord.get_label(),topRight))
-					draw_list(thingsToDraw + monsters)
-					P.display.update()
 
 			if e.type == P.KEYDOWN:
 				if e.key in G.SPECIAL_KEYS:
@@ -229,6 +232,18 @@ def typing():
 						thingsToDraw[1] = ((Letter(keyName, LETTER_COLOR_CENTER).get_label(),(320, 240)))
 						draw_list(thingsToDraw + monsters)
 						P.display.update()
+
+						if len(fieldMsLabel.fieldMs) == 0:
+							gm.screen.fill(BG_COLOR)
+							thingsToDraw = []
+							thingsToDraw.append((Word.create_word('Game Over! You Win').get_label(), screenCenter))
+							thingsToDraw.append((Word.create_word('Press Any Key To Continue').get_label(), (centerX, centerY-100)))
+							thingsToDraw.append((Word.create_word('Your Score was {}'.format(score)).get_label(),(centerX,centerY+100)))
+							draw_list(thingsToDraw)
+							P.display.update()
+							loop = False
+							sleep(0.5)
+							break
 
 	while(startOver):
 		sleep(0.5)
