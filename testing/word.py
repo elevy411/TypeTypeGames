@@ -96,3 +96,8 @@ class Word(pygame.font.Font):
     def print_letter_facts(self):
         for letter in self.letters:
             letter.print_facts()
+
+    def pop(self):
+        self.letters = self.letters[1:]
+        self.length = max(0, self.length - 1)
+        self.update()

@@ -10,7 +10,8 @@ from gameMenu import GameMenu
 import basicTyping as BT
 import speed as SP
 import TypeWars as TW
-
+import typeTypeRevolution as TTR
+import monster as M
 
 def Difficulty():
     screen = P.display.set_mode(G.DEF_DIMENSIONS, 0, 32)
@@ -50,12 +51,15 @@ def Main():
     screen = P.display.set_mode(G.DEF_DIMENSIONS, 0, 32)
     
     #menu_items = ("Basic Typing","Quit")
-    menu_items = ("Basic Typing","Settings","Falling Words","TypeWars","Quit")
+    menu_items = ("Basic Typing","Settings","Falling Words",
+                  "TypeWars","Type Type Revolution","Type Vs Monster","Quit")
     
     funcs = {     "Basic Typing": BT.typing,
               "Settings" : Settings,
              "Falling Words": SP.testingSpeed,
              "TypeWars" : TW.typing,
+             "Type Type Revolution" : TTR.typing,
+             "Type Vs Monster" : M.typing,
                    "Quit": sys.exit
     }
  
