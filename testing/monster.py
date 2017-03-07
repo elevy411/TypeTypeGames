@@ -55,9 +55,9 @@ class FieldMonsters():
 				return
 
 	def addRandomWord(self, angle):
-		word = self.pool[random.randint(0, len(self.pool))]
+		word = self.pool[random.randint(0, len(self.pool) - 1)]
 		while word in self.chosen:
-			word = self.pool[random.randint(0, len(self.pool))]
+			word = self.pool[random.randint(0, len(self.pool) - 1)]
 		self.chosen.append(word)
 		return Monster(word.get_text(), self, angle)
 
