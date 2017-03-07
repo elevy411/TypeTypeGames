@@ -15,6 +15,7 @@ class FieldMonsters():
 		self.fieldMs = []
 		self.pool = words
 		self.chosen = []
+		self.toDelete = []
 		angles = [0, math.pi/2, math.pi, 3 * math.pi/2]
 		r = 1
 		while (2 << r) < n:
@@ -27,15 +28,24 @@ class FieldMonsters():
 			self.fieldMs.append(self.addRandomWord(angles[i]))
 
 	def tryLetter(self, letter):
+		changed = False
 		for i in self.fieldMs:
-			if letter == i.getHead():
-				i_len = i.updateWord()
+			if letter.lower() == i.getHead():
+				i.updateWord()
+				changed = True
+		for i in self.toDelete:
+			self.delete(i)
+		self.toDelete = []
+		return changed
 
 	def get_field(self):
 		return self.fieldMs
 
 	def resetChosen(self):
 		self.chosen = []
+
+	def queue_delete(self, monster):
+		self.toDelete.append(monster)
 
 	def delete(self, monster):
 		for i in range(len(self.fieldMs)):
@@ -60,7 +70,7 @@ class Monster(Word):
 		self.parent = parent
 
 	def getHead(self):
-		return self.head.letter
+		return self.head.letter.lower()
 
 	#Assume that word will update when a letter has been typed?
 	def updateWord(self):
@@ -68,7 +78,7 @@ class Monster(Word):
 		if self.length > 0:
 			self.head = self.get_letters()[0]
 		else:
-			self.parent.delete(self)
+			self.parent.queue_delete(self)
 
 	def attach(self, monster_list):
 		self.parent = parent
@@ -214,17 +224,15 @@ def typing():
 
 						LETTER_COLOR_CENTER = G.RED
 						#Will check all monsters in fieldmonsters
-						for wordmonster in fieldMsLabel.get_field():
-							#Compare keyname with the first letter of the word, and if it ==, then update the word and add +10
-							length = len(fieldMsLabel.get_field())
-							if keyName == wordmonster.getHead():
-								wordmonster.updateWord()
-								score += 10
-								LETTER_COLOR_CENTER = G.GREEN
-								#Also, now that we have updated, we want to check if the len is 0. If it is 0, then we will +30 on the sore
-								#And also detach the wordmonster from the list
-								if len(fieldMsLabel.get_field()) < length:
-									score += 30
+						length = len(fieldMsLabel.get_field())
+						tried = fieldMsLabel.tryLetter(keyName)
+						if tried:
+							score += 10
+							LETTER_COLOR_CENTER = G.GREEN
+							#Also, now that we have updated, we want to check if the len is 0. If it is 0, then we will +30 on the sore
+							#And also detach the wordmonster from the list
+							if len(fieldMsLabel.get_field()) < length:
+								score += 30
 
 							monsters = [(i.get_label(), i.get_pos(r * (timeCount / originaltimeCount))) for i in fieldMsLabel.get_field()]
 							# P.display.update()
