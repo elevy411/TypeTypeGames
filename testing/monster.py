@@ -9,6 +9,19 @@ import Globals as G
 from menuItem import MenuItem
 from gameMenu import GameMenu
 
+BG_PATH = "TTM_Files/Monster_Background.jpg"
+BG_WAND = "TTM_Files/wand2.png"
+
+
+class Image(P.sprite.Sprite):
+    def __init__(self, filepath, coord):
+        P.sprite.Sprite.__init__(self)
+        self.image = P.image.load(filepath)
+        self.rect = self.image.get_rect()
+        self.rect.left, self.rect.top = coord
+        self.w, self.h = self.image.get_size()
+    def scale(self, factor):
+		self.image = P.transform.scale(self.image, ((int)(self.w * factor), (int)(self.h*factor)))
 
 class FieldMonsters():
 	def __init__(self, words, n):
@@ -90,12 +103,19 @@ class Monster(Word):
 		self.set_position(math.cos(self.angle) * radius, math.sin(self.angle) * radius)
 		return math.cos(self.angle) * radius + 320, math.sin(self.angle) * radius + 240
 
+
 P.init()
 
 SCREEN_CENTER = (320,240)
 
 
 def typing():
+
+	bkg = Image(BG_PATH, [0,0])
+	wand = Image(BG_WAND, [290, 180])
+	wand.scale(0.1)
+	
+
 	r = 200
 	polarWordPos = math.pi/2.0
 	loop = True
@@ -167,6 +187,8 @@ def typing():
 		# P.display.update()
 		for e in P.event.get():
 			gm.screen.fill(BG_COLOR)
+			screen.blit(bkg.image, bkg.rect)
+			screen.blit(wand.image, wand.rect)
 			if e.type == P.QUIT:
 				# exit the loop if input is quit
 				loop = False
@@ -194,6 +216,7 @@ def typing():
 				else:
 					#If the time counter is out, then end the game.
 					gm.screen.fill(BG_COLOR)
+					screen.blit(bkg.image, bkg.rect)
 					thingsToDraw = []
 					thingsToDraw.append((Word.create_word('Game Over! You Lose').get_label(),screenCenter))
 					thingsToDraw.append((Word.create_word('Press Any Key To Continue').get_label(),(centerX,centerY-100)))
@@ -243,6 +266,7 @@ def typing():
 
 						if len(fieldMsLabel.fieldMs) == 0:
 							gm.screen.fill(BG_COLOR)
+							screen.blit(bkg.image, bkg.rect)
 							thingsToDraw = []
 							thingsToDraw.append((Word.create_word('Game Over! You Win').get_label(), screenCenter))
 							thingsToDraw.append((Word.create_word('Press Any Key To Continue').get_label(), (centerX, centerY-100)))
