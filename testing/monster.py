@@ -32,14 +32,19 @@ class FieldMonsters():
 		self.toDelete = []
 		angles = [0, math.pi/2, math.pi, 3 * math.pi/2]
 		r = 1
-		while (2 << r) < n:
+		while (2 << r) < 16:
 			a = math.pi/(2 << r)
 			while a < 2 * math.pi:
 				angles.append(a)
 				a += 2 * math.pi/(2 << r)
 			r += 1
-		for i in range(n):
-			self.fieldMs.append(self.addRandomWord(angles[i]))
+		chosen_angles = []
+		for i in range(random.randint(1, n)):
+			angle = angles[random.randint(0, len(angles) - 1)]
+			while angle in chosen_angles:
+				angle = angles[random.randint(0, len(angles) - 1)]
+			chosen_angles.append(angle)
+			self.fieldMs.append(self.addRandomWord(angle))
 
 	def tryLetter(self, letter):
 		changed = False
@@ -70,7 +75,7 @@ class FieldMonsters():
 
 	def addRandomWord(self, angle):
 		word = self.pool[random.randint(0, len(self.pool) - 1)]
-		while word in self.chosen:
+		while word.get_text() == '' or word in self.chosen:
 			word = self.pool[random.randint(0, len(self.pool) - 1)]
 		self.chosen.append(word)
 		return Monster(word, self, angle)
@@ -82,6 +87,7 @@ class Monster():
 		self.head = word.get_letters()[0]
 		self.angle = angle
 		self.parent = parent
+		self.speed = random.uniform(0.33, 1.0)
 
 	def getHead(self):
 		return self.head.letter.lower()
@@ -102,6 +108,9 @@ class Monster():
 
 	def get_pos(self, radius):
 		return math.cos(self.angle) * radius + 320, math.sin(self.angle) * radius + 240
+
+	def rand_speed(self):
+		return self.speed
 
 
 P.init()
@@ -150,21 +159,23 @@ def typing():
 	P.time.set_timer(P.USEREVENT, 10)
 	difficulty_setting = G.DIFFICULTY_LEVEL
 
+	timeCount = 60.00
+	numMon = 0
 
 	if difficulty_setting == 1:
-		fieldMsLabel = FieldMonsters(wordList, 2)
-		timeCount = 5.00
-		timeText = "0:05"
+		numMon = 2
+		subtimeCount = 2.00
 	elif difficulty_setting == 3:
-		fieldMsLabel = FieldMonsters(wordList, 4)
-		timeCount = 7.00
-		timeText = "0:07"
+		numMon = 4
+		subtimeCount = 3.50
 	else:
-		fieldMsLabel = FieldMonsters(wordList, 8)
-		timeCount = 10.00
-		timeText = "0:10"
+		numMon = 8
+		subtimeCount = 5.00
 
-	originaltimeCount = timeCount
+	fieldMsLabel = FieldMonsters(wordList, numMon)
+	originaltimeCount = subtimeCount
+	timeText = "1:00"
+
 	score = G.SCORE
 
 
@@ -193,11 +204,11 @@ def typing():
 				break
 			if e.type == P.USEREVENT:
 				timeCount -= 0.01
+				subtimeCount -= 0.01
 				scalar += 1
-				monsters = [(i.word.get_label(), i.get_pos(r * timeCount/originaltimeCount)) for i in fieldMsLabel.get_field()]
+				monsters = [(i.word.get_label(), i.get_pos(r * subtimeCount/(originaltimeCount * i.rand_speed()))) for i in fieldMsLabel.get_field()]
 				draw_list(thingsToDraw + monsters)
 				P.display.update()
-				#Just the time counter..
 
 				if scalar % 100 == 0:
 					timeWord = Word.create_word(timeText[:4])
@@ -209,14 +220,25 @@ def typing():
 					timeText = "0:{}".format(timeCount)
 				elif timeCount >= 0:
 					timeText = "0:0{}".format(timeCount)
-
 				else:
-					#If the time counter is out, then end the game.
+					gm.screen.fill(BG_COLOR)
+					screen.blit(bkg.image, bkg.rect)
+					thingsToDraw = []
+					thingsToDraw.append((Word.create_word('Game Over! You Win').get_label(), screenCenter))
+					thingsToDraw.append((Word.create_word('Press Escape To Continue').get_label(), (centerX, centerY-100)))
+					thingsToDraw.append((Word.create_word('Your Score was {}'.format(score)).get_label(),(centerX,centerY+100)))
+					draw_list(thingsToDraw)
+					P.display.update()
+					loop = False
+					sleep(0.5)
+					break
+
+				if subtimeCount < 0.01:
 					gm.screen.fill(BG_COLOR)
 					screen.blit(bkg.image, bkg.rect)
 					thingsToDraw = []
 					thingsToDraw.append((Word.create_word('Game Over! You Lose').get_label(),screenCenter))
-					thingsToDraw.append((Word.create_word('Press Any Key To Continue').get_label(),(centerX,centerY-100)))
+					thingsToDraw.append((Word.create_word('Press Escape To Continue').get_label(),(centerX,centerY-100)))
 					thingsToDraw.append((Word.create_word('Your Score was {}'.format(score)).get_label(),(centerX,centerY+100)))
 					draw_list(thingsToDraw)
 					P.display.update()
@@ -254,33 +276,25 @@ def typing():
 							if len(fieldMsLabel.get_field()) < length:
 								score += 30
 
-							monsters = [(i.word.get_label(), i.get_pos(r * (timeCount / originaltimeCount))) for i in fieldMsLabel.get_field()]
-							# P.display.update()
+							monsters = [(i.word.get_label(), i.get_pos(r * subtimeCount/(originaltimeCount * i.rand_speed()))) for i in fieldMsLabel.get_field()]
 
 						thingsToDraw[1] = ((Letter(keyName, LETTER_COLOR_CENTER).get_label(),(320, 240)))
 						draw_list(thingsToDraw + monsters)
 						P.display.update()
 
 						if len(fieldMsLabel.fieldMs) == 0:
-							gm.screen.fill(BG_COLOR)
-							screen.blit(bkg.image, bkg.rect)
-							thingsToDraw = []
-							thingsToDraw.append((Word.create_word('Game Over! You Win').get_label(), screenCenter))
-							thingsToDraw.append((Word.create_word('Press Any Key To Continue').get_label(), (centerX, centerY-100)))
-							thingsToDraw.append((Word.create_word('Your Score was {}'.format(score)).get_label(),(centerX,centerY+100)))
-							draw_list(thingsToDraw)
-							P.display.update()
-							loop = False
-							sleep(0.5)
-							break
+							subtimeCount = originaltimeCount
+							del fieldMsLabel
+							fieldMsLabel = FieldMonsters(wordList, numMon)
+							random_speed = [random.uniform(0.33, 1.00) for i in fieldMsLabel.get_field()]
+
+
 
 	while(startOver):
 		sleep(0.5)
 		for e in P.event.get():
 			if e.type == P.QUIT:
 				# exit the loop if input is quit
-				p = psutil.Process()
 				startOver = False
-			if e.type == P.KEYDOWN:
-				p = psutil.Process()
+			if e.type == P.KEYDOWN and e.key == P.K_ESCAPE:
 				startOver = False
