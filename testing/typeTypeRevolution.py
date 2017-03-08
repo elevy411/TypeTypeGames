@@ -30,24 +30,23 @@ class Background(P.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.left, self.rect.top = coord
 
-base_velocity = 1
 
 def reset_velocity(): # using difficulty stored in Globals, we're setting the velocity
     #velocity is defined as number of pixels to shift per refresh
-    global base_velocity
+    global velocity
     if G.DIFFICULTY_LEVEL == 1:
-        base_velocity = 1
+        velocity = 1
     elif G.DIFFICULTY_LEVEL == 2:
-        base_velocity = 1
+        velocity = 2
     elif G.DIFFICULTY_LEVEL == 3:
-        base_velocity = 2
+        velocity = 3
 
 '''
     update_position: updates position of input letter to redraw
     letter: letter whose position to update
 '''
 def update_position(letter):
-    letter.set_position(letter.pos_x, letter.pos_y + base_velocity)
+    letter.set_position(letter.pos_x, letter.pos_y + velocity)
     
 def spawn_letter():
     ret = Letter(alphabet[random.randrange(0,26,1)])
