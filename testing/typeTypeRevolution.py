@@ -9,11 +9,7 @@ from gameMenu import GameMenu
 import random
 
 
-P.mixer.pre_init(44100, -16, 2, 2048)
-P.init()
-#P.mixer.music.load("TTR_Files/ClubbingOfIsaac.mp3")
-#P.mixer.music.play(-1)
-
+velocity = 1
 alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
     'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'] 
 band_pos = 360 # this will be toward the bottom of the screen
@@ -52,23 +48,7 @@ def reset_velocity(): # using difficulty stored in Globals, we're setting the ve
 '''
 def update_position(letter):
     reset_velocity()
-    speed_boost = 0;
-    if G.DIFFICULTY_LEVEL == 1:
-        if letter.letter > 't': # a quarter of the letters will be faster
-            speed_boost = 1
-    elif G.DIFFICULTY_LEVEL == 2:
-        if letter.letter > 't': # a quarter of the letters will be much faster (diff = 2)
-            speed_boost = 2
-        elif letter.letter > 'm': # half the letters will be faster
-            speed_boost = 1
-    elif G.DIFFICULTY_LEVEL == 3:
-        if letter.letter > 't': # a quarter of the letters will be much faster (diff = 3)
-            speed_boost = 2
-        elif letter.letter > 'm': # half the letters will be faster
-            speed_boost = 1
-
-    letter.set_position(letter.pos_x, letter.pos_y + base_velocity + speed_boost)
-    return None # do we need to return the updated object?
+    letter.set_position(letter.pos_x, letter.pos_y + base_velocity)
     
 def spawn_letter():
     ret = Letter(alphabet[random.randrange(0,26,1)])
@@ -129,7 +109,7 @@ def typing():
     thingsToDraw.append((initial_letter.get_label(),initial_letter.position))
     
     draw_list(thingsToDraw)
-    P.draw.line(screen,G.WHITE,(0,band_pos),(G.D_WIDTH,band_pos))
+    P.draw.line(screen,G.WHITE,(0,band_pos),(G.D_WIDTH,band_pos),4)
     P.display.flip()
     
 
@@ -228,6 +208,6 @@ def typing():
                     current_letters[i].position))
 
         draw_list(thingsToDraw)
-        P.draw.line(screen,G.WHITE,(0,band_pos),(G.D_WIDTH,band_pos))
+        P.draw.line(screen,G.WHITE,(0,band_pos),(G.D_WIDTH,band_pos),4)
         P.display.update()
         thingsToDraw = []
