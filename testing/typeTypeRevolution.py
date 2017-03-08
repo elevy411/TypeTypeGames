@@ -47,7 +47,6 @@ def reset_velocity(): # using difficulty stored in Globals, we're setting the ve
     letter: letter whose position to update
 '''
 def update_position(letter):
-    reset_velocity()
     letter.set_position(letter.pos_x, letter.pos_y + base_velocity)
     
 def spawn_letter():
@@ -112,6 +111,7 @@ def typing():
     P.draw.line(screen,G.WHITE,(0,band_pos),(G.D_WIDTH,band_pos),4)
     P.display.flip()
     
+    reset_velocity()
 
     thingsToDraw=[]
     counter = 0
@@ -121,7 +121,6 @@ def typing():
     clock = P.time.Clock()
     
     while loop:
-        reset_velocity()
         clock.tick(FRAMERATE)
         gm.screen.fill(BG_COLOR)
         screen.blit(bkg.image,bkg.rect)
