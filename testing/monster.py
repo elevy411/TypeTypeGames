@@ -1,5 +1,5 @@
 from time import sleep
-import sys
+import sys, os
 import pygame as P
 from word import Word
 from letter import Letter
@@ -8,6 +8,7 @@ import math, random
 import Globals as G
 from menuItem import MenuItem
 from gameMenu import GameMenu
+import psutil
 
 BG_PATH = "TTM_Files/Monster_Background.jpg"
 BG_WAND = "TTM_Files/wand2.png"
@@ -72,13 +73,13 @@ class FieldMonsters():
 		while word in self.chosen:
 			word = self.pool[random.randint(0, len(self.pool) - 1)]
 		self.chosen.append(word)
-		return Monster(word.get_text(), self, angle)
+		return Monster(word, self, angle)
 
 
-class Monster(Word):
+class Monster():
 	def __init__(self, word, parent, angle):
-		Word.__init__(self, [Letter(letter) for letter in word], word)
-		self.head = self.get_letters()[0]
+		self.word = word
+		self.head = word.get_letters()[0]
 		self.angle = angle
 		self.parent = parent
 
@@ -87,9 +88,9 @@ class Monster(Word):
 
 	#Assume that word will update when a letter has been typed?
 	def updateWord(self):
-		self.pop()
-		if self.length > 0:
-			self.head = self.get_letters()[0]
+		self.word.pop()
+		if self.word.length > 0:
+			self.head = self.word.get_letters()[0]
 		else:
 			self.parent.queue_delete(self)
 
@@ -100,7 +101,6 @@ class Monster(Word):
 		self.parent = []
 
 	def get_pos(self, radius):
-		self.set_position(math.cos(self.angle) * radius, math.sin(self.angle) * radius)
 		return math.cos(self.angle) * radius + 320, math.sin(self.angle) * radius + 240
 
 
@@ -108,13 +108,11 @@ P.init()
 
 SCREEN_CENTER = (320,240)
 
-
 def typing():
-
 	bkg = Image(BG_PATH, [0,0])
 	wand = Image(BG_WAND, [290, 180])
 	wand.scale(0.1)
-	
+
 
 	r = 200
 	polarWordPos = math.pi/2.0
@@ -149,7 +147,6 @@ def typing():
 	lastLetter = None
 	xDifferentials = []
 
-
 	P.time.set_timer(P.USEREVENT, 10)
 	difficulty_setting = G.DIFFICULTY_LEVEL
 
@@ -158,7 +155,7 @@ def typing():
 		fieldMsLabel = FieldMonsters(wordList, 2)
 		timeCount = 5.00
 		timeText = "0:05"
-	elif difficulty_setting == 2:
+	elif difficulty_setting == 3:
 		fieldMsLabel = FieldMonsters(wordList, 4)
 		timeCount = 7.00
 		timeText = "0:07"
@@ -178,7 +175,7 @@ def typing():
 
 	thingsToDraw.append((Word.create_word(timeText).get_label(),topRight))
 	thingsToDraw.append((Word.create_word('').get_label(), topRight))
-	monsters = [(i.get_label(), i.get_pos(r)) for i in fieldMsLabel.get_field()]
+	monsters = [(i.word.get_label(), i.get_pos(r)) for i in fieldMsLabel.get_field()]
 	draw_list(thingsToDraw + monsters)
 	P.display.flip()
 
@@ -197,7 +194,7 @@ def typing():
 			if e.type == P.USEREVENT:
 				timeCount -= 0.01
 				scalar += 1
-				monsters = [(i.get_label(), i.get_pos(r * timeCount/originaltimeCount)) for i in fieldMsLabel.get_field()]
+				monsters = [(i.word.get_label(), i.get_pos(r * timeCount/originaltimeCount)) for i in fieldMsLabel.get_field()]
 				draw_list(thingsToDraw + monsters)
 				P.display.update()
 				#Just the time counter..
@@ -257,7 +254,7 @@ def typing():
 							if len(fieldMsLabel.get_field()) < length:
 								score += 30
 
-							monsters = [(i.get_label(), i.get_pos(r * (timeCount / originaltimeCount))) for i in fieldMsLabel.get_field()]
+							monsters = [(i.word.get_label(), i.get_pos(r * (timeCount / originaltimeCount))) for i in fieldMsLabel.get_field()]
 							# P.display.update()
 
 						thingsToDraw[1] = ((Letter(keyName, LETTER_COLOR_CENTER).get_label(),(320, 240)))
@@ -282,6 +279,8 @@ def typing():
 		for e in P.event.get():
 			if e.type == P.QUIT:
 				# exit the loop if input is quit
+				p = psutil.Process()
 				startOver = False
 			if e.type == P.KEYDOWN:
-			   startOver = False
+				p = psutil.Process()
+				startOver = False

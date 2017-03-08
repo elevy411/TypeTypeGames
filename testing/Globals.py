@@ -2,6 +2,7 @@ import sys
 import pygame as P
 import random
 from time import sleep
+import psutil, os
 
 P.init()
 P.font.init()
@@ -27,7 +28,9 @@ D_HEIGHT = 480
 DEF_DIMENSIONS = (D_WIDTH,D_HEIGHT)
 DIFFICULTY_LEVEL = 1
 TOP_CENTER = (320,120)
-SCREEN_CENTER = (320,240) 
+SCREEN_CENTER = (320,240)
+
+openf = []
 
 def make_word_list(wordList='wordList.txt'):
 	global WORDLIST
@@ -78,9 +81,15 @@ def getRandom(inputList):
 def get_random_no_dups(inputList,firstLetters):
 	if len(inputList) == len(firstLetters):
 		return False
-	
+
 	filtered = filter(lambda x: x[0] not in firstLetters,inputList)
 	if len(filtered) == 0:
 		return False
 	else:
 		return random.choice(filtered)
+
+def cleanup(openf):
+	p = psutil.Process()
+	for i in p.open_files():
+		if '.ttf' in i.path and i not in openf:
+			os.close(i.fd)
