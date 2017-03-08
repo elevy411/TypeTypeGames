@@ -164,14 +164,12 @@ def typing():
 
 	if difficulty_setting == 1:
 		numMon = 2
-		subtimeCount = 3.00
 	elif difficulty_setting == 3:
 		numMon = 4
-		subtimeCount = 4.00
 	else:
 		numMon = 8
-		subtimeCount = 5.00
 
+    subtimeCount = 5.00
 	fieldMsLabel = FieldMonsters(wordList, numMon)
 	originaltimeCount = subtimeCount
 	timeText = "1:00"
