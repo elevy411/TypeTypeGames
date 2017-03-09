@@ -35,9 +35,9 @@ def reset_velocity(): # using difficulty stored in Globals, we're setting the ve
     global velocity
     if G.DIFFICULTY_LEVEL == 1:
         velocity = 1
-    elif G.DIFFICULTY_LEVEL == 2:
-        velocity = 2
     elif G.DIFFICULTY_LEVEL == 3:
+        velocity = 2
+    elif G.DIFFICULTY_LEVEL == 5:
         velocity = 3
 
 '''
@@ -116,7 +116,7 @@ def typing():
     thingsToDraw=[]
     counter = 0
     line_counter = 0
-    spawn_letter_interval = 15 + 30/G.DIFFICULTY_LEVEL # letters will spawn at a constant speed
+    spawn_letter_interval = 15 + 60/G.DIFFICULTY_LEVEL # letters will spawn at a constant speed
     clock = P.time.Clock()
     
     while loop:
@@ -144,7 +144,7 @@ def typing():
             else: 
                 thingsToDraw = []
                 thingsToDraw.append((Word.create_word('Game Over!').get_label(),topCenter))
-                thingsToDraw.append((Word.create_word('Press Any Key To Continue').get_label(),(centerX,centerY-100)))
+                # thingsToDraw.append((Word.create_word('Press Any Key To Continue').get_label(),(centerX,centerY-100)))
                 thingsToDraw.append((Word.create_word('Your Score was {}'.format(score)).get_label(),(centerX,centerY+100)))
                 draw_list(thingsToDraw)
                 P.display.update()

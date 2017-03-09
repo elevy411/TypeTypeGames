@@ -44,10 +44,10 @@ def set_difficulty_easy():
 
 def set_difficulty_medium():
 	global DIFFICULTY_LEVEL
-	DIFFICULTY_LEVEL = 2
+	DIFFICULTY_LEVEL = 3
 	print "Difficulty level is -- {}".format(DIFFICULTY_LEVEL)
 
 def set_difficulty_hard():
 	global DIFFICULTY_LEVEL
-	DIFFICULTY_LEVEL = 3
+	DIFFICULTY_LEVEL = 5
 	print "Difficulty level is -- {}".format(DIFFICULTY_LEVEL)
