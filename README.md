@@ -10,6 +10,8 @@ Installation:
 
 - After that, everything needed to play or test the game should be installed!
 
+To run the tests:
+Simply type "./runAllTests" or ./runTest xxxx
 
 Functionality Description:
 
