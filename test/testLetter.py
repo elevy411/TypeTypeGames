@@ -14,7 +14,7 @@ def test_set_get_letter():
 	test_letter.set_letter('a')
 
 def test_set_get_label():
-	test_letter.set_label(G.RED)
+	test_letter.set_label(G.WHITE)
 	assert (test_letter.label == test_letter.get_label())
 
 def test_set_position():
@@ -27,13 +27,13 @@ def test_set_position():
 def test_font_color():
 	assert (test_letter.font_color == G.WHITE)
 
-	test_letter.set_font_color("#404040")
+	test_letter.set_font_color((1,1,1))
 
-	assert (test_letter.font_color == pygame.Color("#404040"))
+	assert (test_letter.font_color == (1,1,1))
 
 def test_equals():
-	letter1 = Letter('a', G.RED, font, 20, (50, 50))
-	letter2 = Letter('b', G.WHITE, font, 30, (20, 20))
+	letter1 = Letter('a', G.WHITE, G.MONOSPACE_FONT, 20, (50, 50))
+	letter2 = Letter('b', G.WHITE, G.MONOSPACE_FONT, 30, (20, 20))
 
 	assert (test_letter.equals(letter1))
 	assert (test_letter.equals(letter2) == False)
