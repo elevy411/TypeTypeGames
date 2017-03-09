@@ -1,46 +1,20 @@
 import monster
+import Globals as G
+from word import Word
 
 #Checks to see if the monster has retrieved the head letter
 def test_getHead(test_monster):
 	test_word = test_monster.word.letters[0]
 	monster_head = test_monster.getHead()
-	assert (monster_head == test_word), "The letter should be" + test_word.letters[0]
+	assert (monster_head == test_word.letter), "The letter should be" + test_word.letters[0].letter
 
 def test_updateWord(test_monster):
-	test_word = test_monster.word
-	save_word = test_word.letters[1:len(test_word)]
-	test_word.updateWord()
-	assert (save_word == test_word.letters),  "Word was not updated for" + str(test_word.letters)
-
-#Given a list of monsters, checks to see if successfully attache a monster to a list of monsters
-def test_attach(test_fieldmonsters, test_monster):
-	check_attach = test_fieldmonsters.attach(test_monster)
-
-
-#Given a monster, will check to see if a letter has been detached from the word that is associated with the monster
-def test_detach(test_monster):
-	new_monster = test_monster.detach()
-
-
-
-#Checks status of notification to see if letter notification was truly sent or not
-def test_notify(test_monster):
-	monster_notify = test_monster.notify()
-	assert (monster_notify == True), "The notification should be true"
-
-
-#Given a list of monsters, adds an additional monster with a random word to the list of monsters
-def test_addRandomWord(test_fieldmonsters, test_word):
-	check_wordAdded = test_fieldmonsters.addRandomWord(test_word)
-	assert (check_wordAdded != None), "The word was not successfully added"
+	save_word = test_monster.word.letters[1:len(test_monster.word.letters)]
+	test_monster.updateWord()
+	assert (save_word == test_monster.word.letters),  "Word was not updated for" + str(test_monster.letters)
 
 def test_tryLetter(letter, fm):
-	x = fm.get_field()[0]
-	fm.tryLetter(letter)
-	assert (fm.get_field()[0] == fm.get_field[1:]), "Try Letter failed"
-
-def test_get_field(fm):
-	assert (type(fm.get_field()) != type([])), "Could not get field"
+	assert (fm.tryLetter(letter)), "Try Letter failed"
 
 def test_resetChosen(fm):
 	fm.resetChosen()
@@ -52,3 +26,13 @@ def test_delete(fm, monster):
 		if i == monster:
 			print "Delete failed"
 			return False
+
+words = G.make_word_list()
+wordList = map(lambda listword: Word.create_word(listword),words)
+
+fm = monster.FieldMonsters(wordList, 4)
+test_getHead(fm.get_field()[0])
+test_updateWord(fm.get_field()[0])
+test_tryLetter(fm.get_field()[0].word.text[0], fm)
+test_resetChosen(fm)
+test_delete(fm, fm.get_field()[0])

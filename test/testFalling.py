@@ -9,16 +9,16 @@ import speed as T
 test_word = word.Word.create_word("TestWord")
 test_word.set_position(G.TOP_CENTER[0],G.TOP_CENTER[1])
 
-def test_word_fall(word):
+def test_word_fall(aword):
 	# get the position of the word created
-	x, y = word.get_position()
+	x, y = aword.position
 
 	# lower the word by 15 pixels
-	word.fall(15)
+	aword.fall(15)
 
 	# verify that the word has dropped 15 pixels
 
-	x2, y2 = word.get_position()
+	x2, y2 = aword.position
 
 	# verify that the x coordinates stay the same
 	# and that the y coordinate has dropped 15 pixels
@@ -72,3 +72,8 @@ def test_increment_score():
 	# ensure that the score has been incremented by 1
 	assert T.get_score() == curren_score + 1, "Score incorrect after word completion"
 	print "Increment score test passed"
+
+# test_word_fall(test_word)
+test_level_up()
+test_decrement_score()
+test_increment_score()
