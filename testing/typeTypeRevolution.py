@@ -22,7 +22,6 @@ FRAMERATE = 60
 BG_PATH = "TTR_Files/BKG1.jpg"
 
 
-
 class Background(P.sprite.Sprite):
     def __init__(self, filepath, coord):
         P.sprite.Sprite.__init__(self)
@@ -63,7 +62,9 @@ def within_range(input_letter):
 
   
 def typing():
-
+    line_color = G.WHITE
+    P.mixer.music.load('sounds/The_Clubbing_of_Isaac.mp3')
+    P.mixer.music.play(0)
     loop = True
     
     screen = P.display.set_mode((G.D_WIDTH, G.D_HEIGHT),0,32)
@@ -107,16 +108,15 @@ def typing():
     thingsToDraw.append((initial_letter.get_label(),initial_letter.position))
     
     draw_list(thingsToDraw)
-    P.draw.line(screen,G.WHITE,(0,band_pos),(G.D_WIDTH,band_pos),4)
+    P.draw.line(screen,line_color,(0,band_pos),(G.D_WIDTH,band_pos),4)
     P.display.flip()
     
     reset_velocity()
 
     thingsToDraw=[]
     counter = 0
+    line_counter = 0
     spawn_letter_interval = 15 + 30/G.DIFFICULTY_LEVEL # letters will spawn at a constant speed
-    
-
     clock = P.time.Clock()
     
     while loop:
@@ -127,9 +127,13 @@ def typing():
         thingsToDraw.append((Word.create_word(timeText).get_label(),topRight))
        
         counter += 1 # this counter will be used to determine when to spawn a new letter
+        line_counter += 1 # this counter will be used to determine when to revert the line color to white
         if (counter % spawn_letter_interval == 0): # when the interval between letter spawning has passed
             new_letter = spawn_letter()
             current_letters.append(new_letter)
+
+        if (line_counter % (FRAMERATE / 4) == 0):
+            line_color = G.WHITE
         #see if update time
         if (counter % FRAMERATE == 0):
             timeCount -= 1
@@ -144,6 +148,7 @@ def typing():
                 thingsToDraw.append((Word.create_word('Your Score was {}'.format(score)).get_label(),(centerX,centerY+100)))
                 draw_list(thingsToDraw)
                 P.display.update()
+                P.mixer.music.stop()
                 loop = False
                 #would like to figure out why sleep
                 sleep(5.0)
@@ -151,6 +156,7 @@ def typing():
                     
         for e in P.event.get(): 
             if e.type == P.QUIT:
+                P.mixer.music.stop()
                 loop = False
                 break
    #         if e.type == P.USEREVENT: # code taken (and modified) from basic typing game
@@ -158,6 +164,7 @@ def typing():
             if e.type == P.KEYDOWN: # if the user has pressed a key
                 #user wants to leave this place
                 if e.key== P.K_ESCAPE:
+                    P.mixer.music.stop()
                     loop = False
                     break
                 #if ASCII, basically
@@ -170,11 +177,15 @@ def typing():
                     for character in current_letters:
                         if character.letter == keyName:
                             if within_range(character):
+                                line_color = (0,255,0) # green
+                                line_counter = 0;
                                 current_letters.remove(character)
                                 score += 10
                                 is_in_band = True
                                 break
                     if not is_in_band: # deduct 5 points if there is no matching letter within the band
+                        line_color = (255,0,0) # red
+                        line_counter = 0;
                         if score - 1 >= 0:
                             score -= 1
                         else:
@@ -190,7 +201,10 @@ def typing():
         #deduct points for letters than have fallen below range
         for x in current_letters:
             if (x.pos_y > band_pos + band_range):
-                score -= 5
+                if score >= 5:
+                    score -= 5
+                else:
+                    score = 0
         #only consider letters that did not fall below band
         updated_list = [x for x in current_letters if
             (x.pos_y <= band_pos + band_range)]
@@ -206,6 +220,6 @@ def typing():
                     current_letters[i].position))
 
         draw_list(thingsToDraw)
-        P.draw.line(screen,G.WHITE,(0,band_pos),(G.D_WIDTH,band_pos),4)
+        P.draw.line(screen,line_color,(0,band_pos),(G.D_WIDTH,band_pos),4)
         P.display.update()
         thingsToDraw = []
