@@ -180,19 +180,19 @@ def typing():
 	draw_list(thingsToDraw + monsters)
 	P.display.flip()
 
+
 	scalar = 0
 	while loop:
 		# P.display.update()
 		for e in P.event.get():
-			gm.screen.fill(BG_COLOR)
-			screen.blit(bkg.image, bkg.rect)
-			screen.blit(wand.image, wand.rect)
 			if e.type == P.QUIT:
 				# exit the loop if input is quit
 				loop = False
 				startOver = False
 				break
 			if e.type == P.USEREVENT:
+		                screen.blit(bkg.image, bkg.rect)
+        			screen.blit(wand.image, wand.rect)
 				timeCount -= 0.01
 				subtimeCount -= 0.01
 				scalar += 1
@@ -269,6 +269,8 @@ def typing():
 							monsters = [(i.word.get_label(), i.get_pos(r * subtimeCount/(originaltimeCount * i.rand_speed()))) for i in fieldMsLabel.get_field()]
 
 						thingsToDraw[1] = ((Letter(keyName, LETTER_COLOR_CENTER).get_label(),(320, 240)))
+        		                        screen.blit(bkg.image, bkg.rect)
+	                			screen.blit(wand.image, wand.rect)
 						draw_list(thingsToDraw + monsters)
 						P.display.update()
 
