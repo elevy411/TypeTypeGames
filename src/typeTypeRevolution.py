@@ -9,11 +9,7 @@ from gameMenu import GameMenu
 import random
 
 
-P.mixer.pre_init(44100, -16, 2, 2048)
-P.init()
-#P.mixer.music.load("TTR_Files/ClubbingOfIsaac.mp3")
-#P.mixer.music.play(-1)
-
+velocity = 1
 alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
     'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
 band_pos = 360 # this will be toward the bottom of the screen
@@ -26,7 +22,6 @@ FRAMERATE = 60
 BG_PATH = "static/TTR_Files/BKG1.jpg"
 
 
-
 class Background(P.sprite.Sprite):
     def __init__(self, filepath, coord):
         P.sprite.Sprite.__init__(self)
@@ -34,41 +29,23 @@ class Background(P.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.left, self.rect.top = coord
 
-base_velocity = 1
 
 def reset_velocity(): # using difficulty stored in Globals, we're setting the velocity
     #velocity is defined as number of pixels to shift per refresh
-    global base_velocity
+    global velocity
     if G.DIFFICULTY_LEVEL == 1:
-        base_velocity = 1
-    elif G.DIFFICULTY_LEVEL == 2:
-        base_velocity = 1
+        velocity = 1
     elif G.DIFFICULTY_LEVEL == 3:
-        base_velocity = 2
+        velocity = 2
+    elif G.DIFFICULTY_LEVEL == 5:
+        velocity = 3
 
 '''
     update_position: updates position of input letter to redraw
     letter: letter whose position to update
 '''
 def update_position(letter):
-    reset_velocity()
-    speed_boost = 0;
-    if G.DIFFICULTY_LEVEL == 1:
-        if letter.letter > 't': # a quarter of the letters will be faster
-            speed_boost = 1
-    elif G.DIFFICULTY_LEVEL == 2:
-        if letter.letter > 't': # a quarter of the letters will be much faster (diff = 2)
-            speed_boost = 2
-        elif letter.letter > 'm': # half the letters will be faster
-            speed_boost = 1
-    elif G.DIFFICULTY_LEVEL == 3:
-        if letter.letter > 't': # a quarter of the letters will be much faster (diff = 3)
-            speed_boost = 2
-        elif letter.letter > 'm': # half the letters will be faster
-            speed_boost = 1
-
-    letter.set_position(letter.pos_x, letter.pos_y + base_velocity + speed_boost)
-    return None # do we need to return the updated object?
+    letter.set_position(letter.pos_x, letter.pos_y + velocity)
 
 def spawn_letter():
     ret = Letter(alphabet[random.randrange(0,26,1)])
@@ -85,7 +62,9 @@ def within_range(input_letter):
 
 
 def typing():
-
+    line_color = G.WHITE
+    P.mixer.music.load('static/sounds/The_Clubbing_of_Isaac.mp3')
+    P.mixer.music.play(0)
     loop = True
 
     screen = P.display.set_mode((G.D_WIDTH, G.D_HEIGHT),0,32)
@@ -129,19 +108,18 @@ def typing():
     thingsToDraw.append((initial_letter.get_label(),initial_letter.position))
 
     draw_list(thingsToDraw)
-    P.draw.line(screen,G.WHITE,(0,band_pos),(G.D_WIDTH,band_pos))
+    P.draw.line(screen,line_color,(0,band_pos),(G.D_WIDTH,band_pos),4)
     P.display.flip()
 
+    reset_velocity()
 
     thingsToDraw=[]
     counter = 0
-    spawn_letter_interval = 15 + 30/G.DIFFICULTY_LEVEL # letters will spawn at a constant speed
-
-
+    line_counter = 0
+    spawn_letter_interval = 15 + 60/G.DIFFICULTY_LEVEL # letters will spawn at a constant speed
     clock = P.time.Clock()
 
     while loop:
-        reset_velocity()
         clock.tick(FRAMERATE)
         gm.screen.fill(BG_COLOR)
         screen.blit(bkg.image,bkg.rect)
@@ -149,9 +127,13 @@ def typing():
         thingsToDraw.append((Word.create_word(timeText).get_label(),topRight))
 
         counter += 1 # this counter will be used to determine when to spawn a new letter
+        line_counter += 1 # this counter will be used to determine when to revert the line color to white
         if (counter % spawn_letter_interval == 0): # when the interval between letter spawning has passed
             new_letter = spawn_letter()
             current_letters.append(new_letter)
+
+        if (line_counter % (FRAMERATE / 4) == 0):
+            line_color = G.WHITE
         #see if update time
         if (counter % FRAMERATE == 0):
             timeCount -= 1
@@ -162,10 +144,11 @@ def typing():
             else:
                 thingsToDraw = []
                 thingsToDraw.append((Word.create_word('Game Over!').get_label(),topCenter))
-                thingsToDraw.append((Word.create_word('Press Any Key To Continue').get_label(),(centerX,centerY-100)))
+                # thingsToDraw.append((Word.create_word('Press Any Key To Continue').get_label(),(centerX,centerY-100)))
                 thingsToDraw.append((Word.create_word('Your Score was {}'.format(score)).get_label(),(centerX,centerY+100)))
                 draw_list(thingsToDraw)
                 P.display.update()
+                P.mixer.music.stop()
                 loop = False
                 #would like to figure out why sleep
                 sleep(5.0)
@@ -173,6 +156,7 @@ def typing():
 
         for e in P.event.get():
             if e.type == P.QUIT:
+                P.mixer.music.stop()
                 loop = False
                 break
    #         if e.type == P.USEREVENT: # code taken (and modified) from basic typing game
@@ -180,6 +164,7 @@ def typing():
             if e.type == P.KEYDOWN: # if the user has pressed a key
                 #user wants to leave this place
                 if e.key== P.K_ESCAPE:
+                    P.mixer.music.stop()
                     loop = False
                     break
                 #if ASCII, basically
@@ -192,11 +177,15 @@ def typing():
                     for character in current_letters:
                         if character.letter == keyName:
                             if within_range(character):
+                                line_color = (0,255,0) # green
+                                line_counter = 0;
                                 current_letters.remove(character)
                                 score += 10
                                 is_in_band = True
                                 break
                     if not is_in_band: # deduct 5 points if there is no matching letter within the band
+                        line_color = (255,0,0) # red
+                        line_counter = 0;
                         if score - 1 >= 0:
                             score -= 1
                         else:
@@ -212,7 +201,10 @@ def typing():
         #deduct points for letters than have fallen below range
         for x in current_letters:
             if (x.pos_y > band_pos + band_range):
-                score -= 5
+                if score >= 5:
+                    score -= 5
+                else:
+                    score = 0
         #only consider letters that did not fall below band
         updated_list = [x for x in current_letters if
             (x.pos_y <= band_pos + band_range)]
@@ -228,6 +220,6 @@ def typing():
                     current_letters[i].position))
 
         draw_list(thingsToDraw)
-        P.draw.line(screen,G.WHITE,(0,band_pos),(G.D_WIDTH,band_pos))
+        P.draw.line(screen,line_color,(0,band_pos),(G.D_WIDTH,band_pos),4)
         P.display.update()
         thingsToDraw = []

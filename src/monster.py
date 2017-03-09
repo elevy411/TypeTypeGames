@@ -87,7 +87,7 @@ class Monster():
 		self.head = word.get_letters()[0]
 		self.angle = angle
 		self.parent = parent
-		self.speed = random.uniform(0.33, 1.0)
+		self.speed = random.uniform(0.5, 1.0)
 
 	def getHead(self):
 		return self.head.letter.lower()
@@ -276,7 +276,7 @@ def typing():
 							subtimeCount = originaltimeCount
 							del fieldMsLabel
 							fieldMsLabel = FieldMonsters(wordList, numMon)
-							random_speed = [random.uniform(0.33, 1.00) for i in fieldMsLabel.get_field()]
+							random_speed = [random.uniform(0.5, 1.00) for i in fieldMsLabel.get_field()]
 
 
 
