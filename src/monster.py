@@ -162,7 +162,7 @@ def typing():
 	timeCount = 60.00
 	numMon = 1 << ((difficulty_setting + 1)/2)
 	fieldMsLabel = FieldMonsters(wordList, numMon)
-	subtimeCount = 5.00
+	subtimeCount = 6.00
 	originaltimeCount = subtimeCount
 	timeText = "1:00"
 
@@ -277,8 +277,6 @@ def typing():
 							del fieldMsLabel
 							fieldMsLabel = FieldMonsters(wordList, numMon)
 							random_speed = [random.uniform(0.5, 1.00) for i in fieldMsLabel.get_field()]
-
-
 
 	while(startOver):
 		sleep(0.5)

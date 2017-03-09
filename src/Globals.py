@@ -92,4 +92,7 @@ def cleanup(openf):
 	p = psutil.Process()
 	for i in p.open_files():
 		if '.ttf' in i.path and i not in openf:
-			os.close(i.fd)
+			try:
+				os.close(i.fd)
+			except:
+				pass
