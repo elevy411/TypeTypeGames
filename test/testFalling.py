@@ -77,3 +77,4 @@ def test_increment_score():
 test_level_up()
 test_decrement_score()
 test_increment_score()
+print "Test Falling Passed."

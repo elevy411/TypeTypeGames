@@ -113,3 +113,4 @@ test_set_font_color(test_word)
 test_set_and_get_text(test_word)
 test_set_and_get_label(test_word, font)
 test_add_remove_clear_letter(test_word, font, letter_a, letter_b, letter_c)
+print "Test Word Passed."

@@ -43,3 +43,4 @@ test_set_get_label()
 test_set_position()
 test_font_color()
 test_equals()
+print "Test Letter Passed."

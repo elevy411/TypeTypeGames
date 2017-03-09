@@ -29,3 +29,4 @@ def test_set_difficulty():
 if __name__ == "__main__":
     test_make_word_list()
     test_set_difficulty()
+print "Test Globals Passed."

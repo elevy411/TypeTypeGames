@@ -28,7 +28,7 @@ def test_set_font_color(test_item):
     test_item.set_font_color((0,100,200))
     assert test_item.font_color == (0,100,200),"set_font_color fails"
 
-    
+
 def test_get_set_text(test_item):
     assert test_item.get_text() == "testing!","get_text fails"
     test_item.set_text("bonkers dude!")
@@ -41,4 +41,4 @@ if __name__ == "__main__":
     test_set_position(test_item)
     test_set_font_color(test_item)
     test_get_set_text(test_item)
-
+print "Test MenuItem Passed."

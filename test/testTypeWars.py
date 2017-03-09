@@ -97,3 +97,4 @@ test_health_mod()
 test_WPM_calc()
 test_combat()
 test_index()
+print "Test Wars Passed."
