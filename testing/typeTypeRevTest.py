@@ -11,26 +11,41 @@ def test_update_position(test_letter):
     #update_position will be dependent on the difficulty
     #will be called each cycle before rendering
     #assuming default speed of 2 at framerate of 30
-    G.set_difficulty_medium()
+    G.set_difficulty_easy()
+    ttr.reset_velocity()
     for i in range(50):
-    	assert test_letter.position == (G.TOP_CENTER[0],G.TOP_CENTER[1]+1*i),"update position fails at medium"
+    	assert test_letter.position == (G.TOP_CENTER[0],G.TOP_CENTER[1]+1*i),"update position fails at easy"
         ttr.update_position(test_letter)
     test_letter.set_position(G.TOP_CENTER[0],G.TOP_CENTER[1])
-    G.set_difficulty_hard()
+
+    G.set_difficulty_medium()
+    ttr.reset_velocity()
     for i in range(50):
-    	assert test_letter.position == (G.TOP_CENTER[0],G.TOP_CENTER[1]+2*i),"update position fails at hard"
+        assert test_letter.position == (G.TOP_CENTER[0],G.TOP_CENTER[1]+2*i),"update position fails at medium"
+        ttr.update_position(test_letter)
+    test_letter.set_position(G.TOP_CENTER[0],G.TOP_CENTER[1])
+
+    G.set_difficulty_hard()
+    ttr.reset_velocity()
+    for i in range(50):
+    	assert test_letter.position == (G.TOP_CENTER[0],G.TOP_CENTER[1]+3*i),"update position fails at hard"
         ttr.update_position(test_letter)
     print "test_update_position passes"
     return None
 
 
 def test_velocity(test_letter):
+    G.set_difficulty_easy()
+    ttr.reset_velocity()
+    assert ttr.velocity == 1, "velocity not set correctly at easy"
+
     G.set_difficulty_medium()
     ttr.reset_velocity()
-    assert ttr.base_velocity == 1, "velocity not set correctly at medium"
-    G.  set_difficulty_hard()
+    assert ttr.velocity == 2, "velocity not set correctly at medium"
+
+    G.set_difficulty_hard()
     ttr.reset_velocity()
-    assert ttr.base_velocity == 2, "velocity not set correctly at hard"
+    assert ttr.velocity == 3, "velocity not set correctly at hard"
     print "test_velocity passes"
     return None
 
