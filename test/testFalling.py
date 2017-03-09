@@ -1,12 +1,12 @@
 
 import game
 import Globals as G
-import Word 
-import Letter
-import TypeTypeFalling as T
+import word
+import letter
+import speed as T
 
 
-test_word = Word.create_word("TestWord")
+test_word = word.Word.create_word("TestWord")
 test_word.set_position(G.TOP_CENTER[0],G.TOP_CENTER[1])
 
 def test_word_fall(word):
@@ -72,4 +72,3 @@ def test_increment_score():
 	# ensure that the score has been incremented by 1
 	assert T.get_score() == curren_score + 1, "Score incorrect after word completion"
 	print "Increment score test passed"
-

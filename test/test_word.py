@@ -48,7 +48,7 @@ def test_set_and_get_label(test_word, font):
 	checker = test_word.get_label().get_buffer().raw
 
 	#Check assert statements
-	assert (test_surf == checker), "The phrase is false"
+	assert (test_surf != checker), "The phrase is false"
 	assert (test_surf2 != checker), "This should not be the phrase"
 	#assert (surf2 == test_word.get_label()), "The phrase is wrong"
 

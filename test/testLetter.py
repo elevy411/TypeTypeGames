@@ -4,10 +4,7 @@ from letter import Letter
 import pygame
 import Globals as G
 
-test_letter = Letter('a', G.WHITE, font, 30, (20, 20)) #Letter constuctor based on pygame Font which takes in (text,color,font,size,(posx,posy))
-font = pygame.font.Font(None, 30)
-
-
+test_letter = Letter('a', G.WHITE, G.MONOSPACE_FONT, 30, (20, 20)) #Letter constuctor based on pygame Font which takes in (text,color,font,size,(posx,posy))
 
 def test_set_get_letter():
 	assert (test_letter.get_letter() == 'a')
@@ -53,6 +50,3 @@ def test_equals():
 
 	assert (test_letter.equals(letter1))
 	assert (test_letter.equals(letter2) == False)
-	
-
-
