@@ -44,6 +44,8 @@ Some Bugs that may occur:
 - Inputs on your keyboard that might mess up the game are keyboard inputs that would mess up most any application (the F keys etc.). Every other key should behave normally or not do anything bad to the game. 
 
 
+We hope you enjoy playing the games!
 
+- Type Type Games Crew
 
 
