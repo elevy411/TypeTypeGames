@@ -4,7 +4,6 @@ import pygame as P
 from word import Word
 from letter import Letter
 import math, random
-#from TypeTest import TypeTest
 import Globals as G
 from menuItem import MenuItem
 from gameMenu import GameMenu
