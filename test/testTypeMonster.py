@@ -35,5 +35,6 @@ test_getHead(fm.get_field()[0])
 test_updateWord(fm.get_field()[0])
 test_tryLetter(fm.get_field()[0].word.text[0], fm)
 test_resetChosen(fm)
-test_delete(fm, fm.get_field()[0])
+if len(fm.get_field()) > 0:
+	test_delete(fm, fm.get_field()[0])
 print "Test Monster Passed."
